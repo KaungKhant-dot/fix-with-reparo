@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Loader2, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/use-auth";
+import { readLocalUser, saveLocalUser, useAuth } from "@/lib/use-auth";
 
 type Mode = "login" | "signup";
 
