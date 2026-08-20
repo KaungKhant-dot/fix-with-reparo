@@ -25,22 +25,20 @@ export const Route = createFileRoute("/")({
 function Welcome() {
   return (
     <div className="app-shell flex flex-col px-6 pb-10 pt-8">
-      <header className="flex items-center justify-center gap-3">
+      <header className="flex items-center justify-center">
         <img
           src={logoAsset.url}
           alt="Reparo"
-          className="h-10 w-auto"
+          className="h-8 w-auto"
         />
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center py-10 text-center">
-        <div className="flex size-36 items-center justify-center rounded-full bg-secondary">
-          <img
-            src={logoAsset.url}
-            alt="Reparo"
-            className="size-24 object-contain"
-          />
-        </div>
+        <img
+          src={logoAsset.url}
+          alt="Reparo"
+          className="h-32 w-auto"
+        />
         <h1 className="mt-8 text-3xl font-bold leading-tight tracking-tight">
           Find & Repair.
         </h1>
