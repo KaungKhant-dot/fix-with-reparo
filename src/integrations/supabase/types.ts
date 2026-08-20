@@ -105,12 +105,13 @@ export type Database = {
           created_at: string | null
           distance: string | null
           id: string
-          image_url: string | null
           is_open: boolean | null
           name: string
+          opening_hours: string | null
           payment_methods: string | null
           phone: string | null
           rating: number | null
+          reviews_count: number | null
         }
         Insert: {
           address?: string | null
@@ -118,12 +119,13 @@ export type Database = {
           created_at?: string | null
           distance?: string | null
           id?: string
-          image_url?: string | null
           is_open?: boolean | null
           name: string
+          opening_hours?: string | null
           payment_methods?: string | null
           phone?: string | null
           rating?: number | null
+          reviews_count?: number | null
         }
         Update: {
           address?: string | null
@@ -131,49 +133,15 @@ export type Database = {
           created_at?: string | null
           distance?: string | null
           id?: string
-          image_url?: string | null
           is_open?: boolean | null
           name?: string
+          opening_hours?: string | null
           payment_methods?: string | null
           phone?: string | null
           rating?: number | null
+          reviews_count?: number | null
         }
         Relationships: []
-      }
-      services: {
-        Row: {
-          created_at: string | null
-          duration: string | null
-          id: string
-          name: string
-          price: string
-          shop_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          duration?: string | null
-          id?: string
-          name: string
-          price: string
-          shop_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          duration?: string | null
-          id?: string
-          name?: string
-          price?: string
-          shop_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "services_shop_id_fkey"
-            columns: ["shop_id"]
-            isOneToOne: false
-            referencedRelation: "repair_shops"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {
