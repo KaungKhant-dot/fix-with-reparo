@@ -96,15 +96,7 @@ export type Database = {
           status?: string | null
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "repair_requests_shop_id_fkey"
-            columns: ["shop_id"]
-            isOneToOne: false
-            referencedRelation: "repair_shops"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       repair_shops: {
         Row: {
@@ -116,6 +108,7 @@ export type Database = {
           image_url: string | null
           is_open: boolean | null
           name: string
+          payment_methods: string | null
           phone: string | null
           rating: number | null
         }
@@ -128,6 +121,7 @@ export type Database = {
           image_url?: string | null
           is_open?: boolean | null
           name: string
+          payment_methods?: string | null
           phone?: string | null
           rating?: number | null
         }
@@ -140,6 +134,7 @@ export type Database = {
           image_url?: string | null
           is_open?: boolean | null
           name?: string
+          payment_methods?: string | null
           phone?: string | null
           rating?: number | null
         }
