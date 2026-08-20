@@ -30,7 +30,9 @@ export type Shop = {
   phone: string;
   hours: string;
   priceRange: string;
+  paymentMethods?: string;
   image: string;
+
 };
 
 export const categoryLabels: Record<CategorySlug, string> = {
