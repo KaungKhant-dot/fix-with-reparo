@@ -121,6 +121,18 @@ function AiScreen() {
         text: `Here are the top ${categoryLabels[selected.category]} repair shops open near you right now.`,
       },
     ]);
+
+    createRequest.mutate(
+      {
+        categorySlug: selected.category,
+        itemDescription: selected.prompt,
+        issueType: selected.id,
+      },
+      {
+        onSuccess: () => toast.success("Saved your repair request."),
+        onError: () => toast.error("Couldn't save your request right now."),
+      },
+    );
   };
 
   const reset = () => {
