@@ -23,13 +23,15 @@ export function ShopCard({ shop }: { shop: Shop }) {
           <StatusPill available={shop.available} />
         </div>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          {shop.categoryLabel} Repair · {shop.desc}
+          {shop.categoryLabel} Repair{shop.desc ? ` · ${shop.desc}` : ""}
         </p>
         <div className="mt-2 flex items-center gap-4 text-xs">
           <span className="flex items-center gap-1 font-semibold">
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.rating}
-            <span className="font-normal text-muted-foreground">({shop.reviews})</span>
+            {shop.reviews && (
+              <span className="font-normal text-muted-foreground">({shop.reviews})</span>
+            )}
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
             <MapPin className="size-3.5" />
