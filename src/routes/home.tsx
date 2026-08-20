@@ -132,22 +132,6 @@ function HomeScreen() {
       </header>
 
       <main className="px-6">
-        <Link
-          to="/ai"
-          className="ai-panel mt-6 flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-primary-foreground shadow-[var(--shadow-card)]"
-        >
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent">
-            <Sparkles className="size-5 text-accent-foreground" />
-          </span>
-          <span className="flex-1">
-            <span className="block font-bold">Ask Reparo AI</span>
-            <span className="block text-xs opacity-80">
-              Describe the problem — we'll find the right specialist.
-            </span>
-          </span>
-          <ArrowRight className="size-5 opacity-90" />
-        </Link>
-
         <section className="mt-8">
           <h2 className="text-base font-bold">Categories</h2>
           <div className="mt-4 grid grid-cols-3 gap-3">
@@ -166,6 +150,26 @@ function HomeScreen() {
             ))}
           </div>
         </section>
+
+        <section className="mt-6" aria-label="Promotions">
+          <BannerCarousel />
+        </section>
+
+        <Link
+          to="/ai"
+          className="ai-panel mt-6 flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-primary-foreground shadow-[var(--shadow-card)]"
+        >
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent">
+            <Sparkles className="size-5 text-accent-foreground" />
+          </span>
+          <span className="flex-1">
+            <span className="block font-bold">Ask Reparo AI</span>
+            <span className="block text-xs opacity-80">
+              Describe the problem — we'll find the right specialist.
+            </span>
+          </span>
+          <ArrowRight className="size-5 opacity-90" />
+        </Link>
 
         <section className="mt-8">
           <div className="flex items-center justify-between">
