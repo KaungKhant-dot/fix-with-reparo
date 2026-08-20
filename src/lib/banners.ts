@@ -33,7 +33,7 @@ export const banners: BannerSlide[] = [
   {
     id: "express-delivery",
     style: "delivery",
-    title: "အိမ်အရောက် လာယူ/ပို့ဆောင်ပေးသော Express Service",
+    title: "စွန့်ပစ်တော့မှာလား",
     subtitle:
       "ဆိုင်ထိ လာစရာမလိုဘဲ အိမ်အရောက် အပ်နှံနိုင်ပါပြီ",
     cta: { label: "အသေးစိတ်ကြည့်ရန်", to: "/ai" },
