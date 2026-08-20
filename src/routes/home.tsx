@@ -18,11 +18,9 @@ import { BannerCarousel } from "@/components/BannerCarousel";
 import { BottomNav } from "@/components/BottomNav";
 import { ShopCard } from "@/components/ShopCard";
 import { FilterBar } from "@/components/FilterBar";
-import {
-  filterAndSortShops,
-  frequentSearches,
-  type CategorySlug,
-} from "@/lib/shops";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
+import { useCategories, useShops } from "@/lib/repair-data";
+import { frequentSearches } from "@/lib/shops";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
