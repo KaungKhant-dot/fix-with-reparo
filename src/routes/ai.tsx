@@ -183,13 +183,19 @@ function AiScreen() {
           ))}
         </div>
 
-        {locationShared && recommended.length > 0 && (
+        {locationShared && (
           <section className="mt-8">
             <h2 className="text-base font-bold">Recommended Shops</h2>
             <div className="mt-4 space-y-4">
-              {recommended.map((shop) => (
-                <ShopCard key={shop.id} shop={shop} />
-              ))}
+              {shopsLoading ? (
+                <ShopListSkeleton />
+              ) : recommended.length > 0 ? (
+                recommended.map((shop) => <ShopCard key={shop.id} shop={shop} />)
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No open shops in this category right now — try again later.
+                </p>
+              )}
             </div>
           </section>
         )}
