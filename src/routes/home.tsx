@@ -62,7 +62,7 @@ function HomeScreen() {
   const [sort, setSort] = useState("nearest");
 
   const { data: categories = [] } = useCategories();
-  const { shops, isLoading, offline } = useShops({ category, sort });
+  const { shops, isLoading, isFetching, offline, retry } = useShops({ category, sort });
   const nearby = shops.slice(0, 6);
 
   const submit = (q: string) => {
