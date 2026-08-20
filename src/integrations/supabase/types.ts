@@ -14,7 +14,172 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          category_slug: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          title: string
+        }
+        Insert: {
+          category_slug?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          title: string
+        }
+        Update: {
+          category_slug?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      repair_requests: {
+        Row: {
+          category_slug: string
+          created_at: string | null
+          id: string
+          issue_type: string | null
+          item_description: string | null
+          shop_id: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category_slug: string
+          created_at?: string | null
+          id?: string
+          issue_type?: string | null
+          item_description?: string | null
+          shop_id?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          category_slug?: string
+          created_at?: string | null
+          id?: string
+          issue_type?: string | null
+          item_description?: string | null
+          shop_id?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repair_requests_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "repair_shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      repair_shops: {
+        Row: {
+          address: string | null
+          category_slug: string
+          created_at: string | null
+          distance: string | null
+          id: string
+          image_url: string | null
+          is_open: boolean | null
+          name: string
+          phone: string | null
+          rating: number | null
+        }
+        Insert: {
+          address?: string | null
+          category_slug: string
+          created_at?: string | null
+          distance?: string | null
+          id?: string
+          image_url?: string | null
+          is_open?: boolean | null
+          name: string
+          phone?: string | null
+          rating?: number | null
+        }
+        Update: {
+          address?: string | null
+          category_slug?: string
+          created_at?: string | null
+          distance?: string | null
+          id?: string
+          image_url?: string | null
+          is_open?: boolean | null
+          name?: string
+          phone?: string | null
+          rating?: number | null
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          created_at: string | null
+          duration: string | null
+          id: string
+          name: string
+          price: string
+          shop_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration?: string | null
+          id?: string
+          name: string
+          price: string
+          shop_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration?: string | null
+          id?: string
+          name?: string
+          price?: string
+          shop_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "repair_shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
