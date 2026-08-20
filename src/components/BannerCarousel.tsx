@@ -4,11 +4,14 @@ import Autoplay from "embla-carousel-autoplay";
 import {
   ArrowRight,
   Footprints,
+  Recycle,
   Shirt,
   ShoppingBag,
   TicketPercent,
   Watch,
+  Wrench,
 } from "lucide-react";
+
 
 import { cn } from "@/lib/utils";
 import {
