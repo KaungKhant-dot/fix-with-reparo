@@ -25,13 +25,14 @@ export const Route = createFileRoute("/")({
 function Welcome() {
   return (
     <div className="app-shell flex flex-col px-6 pb-10 pt-8">
-      <header className="flex items-center justify-center gap-3">
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary">
-          <Wrench className="size-4 text-primary-foreground" />
-        </span>
-        <span className="text-xl font-bold tracking-tight">
-          Repar<span className="text-accent">o</span>
-        </span>
+      <header className="flex justify-center">
+        <img
+          src={reparoLogo.url}
+          alt="Reparo logo"
+          className="h-16 w-auto object-contain"
+          width={240}
+          height={64}
+        />
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center py-10 text-center">
