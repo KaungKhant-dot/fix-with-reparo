@@ -92,6 +92,11 @@ const diagnoses: Diagnosis[] = [
 function AiScreen() {
   const [selected, setSelected] = useState<Diagnosis | null>(null);
   const [locationShared, setLocationShared] = useState(false);
+  const createRequest = useCreateRepairRequest();
+  const { shops, isLoading: shopsLoading } = useShops({
+    category: selected?.category ?? "all",
+    sort: "nearest",
+  });
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "ai",
