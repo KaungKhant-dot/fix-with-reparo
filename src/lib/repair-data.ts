@@ -142,7 +142,7 @@ export function useShop(shopId: string) {
     queryFn: async (): Promise<Shop | null> => {
       const { data, error } = await supabase
         .from("repair_shops")
-        .select("id, name, category_slug, rating, distance, is_open, address, image_url, phone")
+        .select(shopColumns)
         .eq("id", shopId)
         .maybeSingle();
       if (error) throw error;
