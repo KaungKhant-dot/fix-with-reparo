@@ -1,4 +1,4 @@
-import { categoryLabels, categorySlugs } from "@/lib/shops";
+import { useCategories } from "@/lib/repair-data";
 import { cn } from "@/lib/utils";
 
 const sorts = [
