@@ -33,7 +33,7 @@ export const Route = createFileRoute("/search")({
 function SearchScreen() {
   const { q, category, sort } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const results = filterAndSortShops({ query: q, category, sort });
+  const { shops: results, isLoading, offline } = useShops({ query: q, category, sort });
 
   const update = (patch: Record<string, string>) =>
     navigate({ to: ".", search: (prev) => ({ ...prev, ...patch }) });
