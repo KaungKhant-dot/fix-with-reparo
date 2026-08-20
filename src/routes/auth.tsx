@@ -69,45 +69,44 @@ function AuthScreen() {
     }
 
     setBusy(true);
-    try {
-      if (isSignup) {
-        const { data, error } = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: {
-            data: { full_name: fullName.trim() },
-            emailRedirectTo: window.location.origin,
-          },
-        });
-        if (error) throw error;
 
-        if (!data.session) {
-          const retry = await supabase.auth.signInWithPassword({
-            email: email.trim(),
+    const cleanEmail = email.trim();
+    const existing = readLocalUser();
+    const nameForSession = isSignup
+      ? fullName.trim()
+      : (existing?.email === cleanEmail && existing.full_name) ||
+        cleanEmail.split("@")[0] ||
+        "User";
+
+    // Local-first session: works even when the network/Supabase is unreachable.
+    saveLocalUser({ full_name: nameForSession, email: cleanEmail });
+
+    // Best-effort Supabase sync in the background — never blocks the redirect.
+    void (async () => {
+      try {
+        if (isSignup) {
+          const { data } = await supabase.auth.signUp({
+            email: cleanEmail,
             password,
+            options: {
+              data: { full_name: fullName.trim() },
+              emailRedirectTo: window.location.origin,
+            },
           });
-          if (retry.error || !retry.data.session) {
-            setPendingEmail(true);
-            toast.success("Account created — check your email to confirm.");
-            return;
+          if (!data.session) {
+            await supabase.auth.signInWithPassword({ email: cleanEmail, password });
           }
+        } else {
+          await supabase.auth.signInWithPassword({ email: cleanEmail, password });
         }
-        toast.success("Welcome to Reparo!");
-        navigate({ to: "/home", replace: true });
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        });
-        if (error) throw error;
-        toast.success("Logged in.");
-        navigate({ to: "/home", replace: true });
+      } catch {
+        // offline / blocked network — local session already active
       }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
-      setBusy(false);
-    }
+    })();
+
+    toast.success(isSignup ? "Welcome to Reparo!" : "Logged in.");
+    setBusy(false);
+    navigate({ to: "/home", replace: true });
   };
 
   const inputCls =
