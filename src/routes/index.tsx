@@ -9,13 +9,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Reparo matches you with trusted repair shops for motorcycles, cars, phones, laptops and home appliances in seconds.",
+          "Reparo matches you with trusted bag, clothes, watch, shoe, key and glasses repair shops in seconds.",
       },
       { property: "og:title", content: "Reparo — Find Trusted Repair Shops Near You" },
       {
         property: "og:description",
         content:
-          "Trusted repair shops for your motorcycle, car, phone, laptop and home appliances — matched to you in seconds.",
+          "Trusted repair shops for your bags, clothes, watches, shoes, keys and glasses — matched to you in seconds.",
       },
     ],
   }),
@@ -44,7 +44,7 @@ function Welcome() {
           Get Moving.
         </h1>
         <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-          Trusted repair shops for your motorcycle, car, phone, laptop and home appliances — matched
+          Trusted repair shops for your bags, clothes, watches, shoes, keys and glasses — matched
           to you in seconds.
         </p>
       </main>
