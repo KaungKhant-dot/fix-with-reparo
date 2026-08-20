@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, Wrench } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { readLocalUser, saveLocalUser, useAuth } from "@/lib/use-auth";
+
 
 type Mode = "login" | "signup";
 
@@ -113,17 +114,9 @@ function AuthScreen() {
     "w-full rounded-2xl border border-border bg-card px-4 py-3.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary";
 
   return (
-    <div className="app-shell flex min-h-screen flex-col px-6 pb-10 pt-8">
-      <header className="flex items-center justify-center gap-3">
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary">
-          <Wrench className="size-4 text-primary-foreground" />
-        </span>
-        <span className="text-xl font-bold tracking-tight">
-          Repar<span className="text-accent">o</span>
-        </span>
-      </header>
-
+    <div className="app-shell flex min-h-screen flex-col px-6 pb-10 pt-12">
       <main className="flex flex-1 flex-col justify-center py-8">
+
         <h1 className="text-2xl font-bold tracking-tight">
           {isSignup ? "Create your account" : "Welcome back"}
         </h1>
