@@ -13,6 +13,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { PersonalItemIcon } from "@/components/icons";
+import { BannerCarousel } from "@/components/BannerCarousel";
 import { BottomNav } from "@/components/BottomNav";
 import { ShopCard } from "@/components/ShopCard";
 import { frequentSearches, shops, type CategorySlug } from "@/lib/shops";
