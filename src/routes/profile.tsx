@@ -1,6 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Heart, MapPin, Settings, User, Wrench } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { ChevronRight, Heart, MapPin, Settings, Wrench } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/use-auth";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -28,16 +31,27 @@ const rows = [
 ];
 
 function ProfileScreen() {
+  const { user, fullName, initials } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const signOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/", replace: true });
+  };
+
   return (
     <div className="app-shell relative pb-28">
       <header className="hero-panel rounded-b-3xl px-6 pb-8 pt-8 text-primary-foreground">
         <div className="flex items-center gap-4">
-          <span className="flex size-16 items-center justify-center rounded-full bg-primary-foreground/10">
-            <User className="size-7" />
+          <span className="flex size-16 items-center justify-center rounded-full bg-primary-foreground/10 text-xl font-bold">
+            {initials}
           </span>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">Stella Aung</h1>
-            <p className="text-xs opacity-80">Mandalay</p>
+            <h1 className="text-xl font-bold tracking-tight">{fullName || "Guest"}</h1>
+            <p className="text-xs opacity-80">{user?.email ?? "Not signed in"}</p>
           </div>
         </div>
       </header>
@@ -53,9 +67,18 @@ function ProfileScreen() {
           </button>
         ))}
 
-        <Link to="/" className="btn-pill btn-outline mt-6">
-          Log Out
-        </Link>
+        {user ? (
+          <button onClick={signOut} className="btn-pill btn-outline mt-6">
+            Log Out
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate({ to: "/auth", search: { mode: "login" } })}
+            className="btn-pill btn-primary mt-6"
+          >
+            Log In
+          </button>
+        )}
       </main>
 
       <BottomNav active="profile" />
