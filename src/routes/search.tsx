@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search as SearchIcon } from "lucide-react";
-import { filterAndSortShops, frequentSearches } from "@/lib/shops";
+import { frequentSearches } from "@/lib/shops";
+import { useShops } from "@/lib/repair-data";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { FilterBar } from "@/components/FilterBar";
 import { BottomNav } from "@/components/BottomNav";
