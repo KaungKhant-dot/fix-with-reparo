@@ -20,40 +20,29 @@ export const Route = createFileRoute("/notifications")({
   component: NotificationsScreen,
 });
 
-const items = [
-  {
-    Icon: CheckCircle2,
-    title: "Your leather bag repair is ready",
-    body: "Master Leather & Bag Spa finished the zipper replacement.",
-    time: "12 min ago",
-  },
-  {
-    Icon: Watch,
-    title: "Watch battery replacement completed",
-    body: "Precision Watch & Horology · pick up before 7:00 PM.",
-    time: "1 hr ago",
-  },
-  {
-    Icon: Footprints,
-    title: "Shoe resoling in progress",
-    body: "Pro Sole Shoe Repair expects it ready tomorrow afternoon.",
-    time: "3 hrs ago",
-  },
-  {
-    Icon: KeyRound,
-    title: "24/7 Apex Lock & Key replied",
-    body: "Transponder key duplication takes about 45 minutes.",
-    time: "Yesterday",
-  },
-  {
-    Icon: Sparkles,
-    title: "Reparo AI found 3 matches",
-    body: "Bent glasses frame — shops within 1 km of Mandalay.",
-    time: "Yesterday",
-  },
-];
+const categoryIcons: Record<string, typeof Bell> = {
+  bag: Sparkles,
+  clothes: Sparkles,
+  watches: Watch,
+  shoes: Footprints,
+  keys: KeyRound,
+  glasses: Sparkles,
+};
+
+function timeAgo(iso: string | null) {
+  if (!iso) return "";
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.round(diff / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return `${hrs} hr ago`;
+  return `${Math.round(hrs / 24)} d ago`;
+}
 
 function NotificationsScreen() {
+  const { data: items = [], isLoading, isError } = useNotifications();
+
   return (
     <div className="app-shell relative pb-28">
       <header className="hero-panel rounded-b-3xl px-6 pb-7 pt-8 text-primary-foreground">
