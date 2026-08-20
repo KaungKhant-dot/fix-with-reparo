@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import {
   Bell,
   Bike,
@@ -36,7 +36,9 @@ export const Route = createFileRoute("/home")({
   component: HomeScreen,
 });
 
-const categories: { label: string; slug: CategorySlug; Icon: typeof Bike }[] = [
+type IconType = ComponentType<{ className?: string }>;
+
+const categories: { label: string; slug: CategorySlug; Icon: IconType }[] = [
   { label: "Motorcycle", slug: "motorcycle", Icon: Bike },
   { label: "Personal Item", slug: "personal-item", Icon: PersonalItemIcon },
   { label: "Electronics", slug: "electronics", Icon: Tv },
