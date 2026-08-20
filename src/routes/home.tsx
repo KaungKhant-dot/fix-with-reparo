@@ -43,14 +43,14 @@ export const Route = createFileRoute("/home")({
 
 type IconType = ComponentType<{ className?: string }>;
 
-const categories: { label: string; slug: CategorySlug; Icon: IconType }[] = [
-  { label: "Bag", slug: "bag", Icon: Briefcase },
-  { label: "Clothes", slug: "clothes", Icon: Shirt },
-  { label: "Watches", slug: "watches", Icon: Watch },
-  { label: "Shoes", slug: "shoes", Icon: Footprints },
-  { label: "Keys", slug: "keys", Icon: KeyRound },
-  { label: "Glasses", slug: "glasses", Icon: Glasses },
-];
+const categoryIcons: Record<string, IconType> = {
+  bag: Briefcase,
+  clothes: Shirt,
+  watches: Watch,
+  shoes: Footprints,
+  keys: KeyRound,
+  glasses: Glasses,
+};
 
 const frequentIcons: IconType[] = [Scissors, Footprints, Watch, Shirt, KeyRound, Glasses];
 
@@ -61,7 +61,9 @@ function HomeScreen() {
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("nearest");
 
-  const nearby = filterAndSortShops({ category, sort }).slice(0, 6);
+  const { data: categories = [] } = useCategories();
+  const { shops, isLoading, offline } = useShops({ category, sort });
+  const nearby = shops.slice(0, 6);
 
   const submit = (q: string) => {
     setFocused(false);
