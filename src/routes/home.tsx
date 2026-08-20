@@ -42,7 +42,6 @@ const categories: { label: string; slug: CategorySlug; Icon: IconType }[] = [
   { label: "Personal Item", slug: "personal-item", Icon: PersonalItemIcon },
   { label: "Electronics", slug: "electronics", Icon: Tv },
   { label: "Home Appliances", slug: "home-appliances", Icon: WashingMachine },
-  { label: "Phone", slug: "phone", Icon: Smartphone },
 ];
 
 const nearby = [
