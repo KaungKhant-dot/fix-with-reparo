@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { MapPin, RotateCcw, Send, Sparkles } from "lucide-react";
-import { categoryLabels, filterAndSortShops, type CategorySlug } from "@/lib/shops";
+import { toast } from "sonner";
+import { categoryLabels, type CategorySlug } from "@/lib/shops";
+import { useCreateRepairRequest, useShops } from "@/lib/repair-data";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
