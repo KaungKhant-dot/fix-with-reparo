@@ -78,10 +78,10 @@ function ShopDetails() {
           <StatusPill available={shop.available} />
         </div>
 
-        <div className="mt-3 flex items-center gap-4 text-xs">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-center gap-1 font-semibold">
-            <Star className="size-3.5 fill-accent text-accent" />
             {shop.rating}
+            <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
               <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
             )}
@@ -90,6 +90,12 @@ function ShopDetails() {
             <MapPin className="size-3.5" />
             {shop.distance} away
           </span>
+          {shop.hours && (
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Clock className="size-3.5" />
+              {shop.hours}
+            </span>
+          )}
         </div>
 
         {shop.paymentMethods && (
