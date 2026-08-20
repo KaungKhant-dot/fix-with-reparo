@@ -48,7 +48,9 @@ function CategoryScreen() {
       </header>
 
       <main className="space-y-4 px-6 pt-6">
-        {list.length === 0 ? (
+        {isLoading ? (
+          <ShopListSkeleton />
+        ) : list.length === 0 ? (
           <p className="text-sm text-muted-foreground">No shops in this category yet.</p>
         ) : (
           list.map((shop) => <ShopCard key={shop.id} shop={shop} />)
