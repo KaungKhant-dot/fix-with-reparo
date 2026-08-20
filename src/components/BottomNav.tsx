@@ -28,7 +28,7 @@ export function BottomNav({ active }: { active: "home" | "alerts" | "ai" | "sear
             AI
           </span>
         </div>
-        <Link to="/search" className={cls("search")}>
+        <Link to="/search" search={{ q: "" }} className={cls("search")}>
           <Search className="size-5" />
           Search
         </Link>
