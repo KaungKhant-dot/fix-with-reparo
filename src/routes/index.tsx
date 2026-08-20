@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, Phone, Wrench } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { ReparoToolMark } from "@/components/icons";
+import reparoLogo from "@/assets/reparo-logo.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
