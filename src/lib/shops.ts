@@ -44,6 +44,16 @@ export const categoryLabels: Record<CategorySlug, string> = {
   glasses: "Glasses",
 };
 
+/** Burmese shop-type labels shown on cards, details and AI replies. */
+export const categoryShopLabels: Record<CategorySlug, string> = {
+  bag: "အိတ်ပြင်ဆိုင်",
+  clothes: "အဝတ်အထည်ပြင်ဆိုင်",
+  watches: "နာရီပြင်ဆိုင်",
+  shoes: "ဖိနပ်ပြင်ဆိုင်",
+  keys: "သော့ပြင်ဆိုင်",
+  glasses: "မျက်မှန်ပြင်ဆိုင်",
+};
+
 export const categorySlugs: CategorySlug[] = [
   "bag",
   "clothes",
