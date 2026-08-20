@@ -31,7 +31,9 @@ export function ShopCard({ shop }: { shop: Shop }) {
             {shop.rating}
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
-              <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
+              <span className="font-normal text-muted-foreground">
+                ({shop.reviews} သုံးသပ်ချက်)
+              </span>
             )}
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
