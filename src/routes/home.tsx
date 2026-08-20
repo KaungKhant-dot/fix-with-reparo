@@ -1,22 +1,28 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type ComponentType } from "react";
 import {
-  Bell,
-  Bike,
   ArrowRight,
+  Bell,
+  Briefcase,
+  Footprints,
+  Glasses,
+  KeyRound,
   MapPin,
+  Scissors,
   Search,
-  Smartphone,
+  Shirt,
   Sparkles,
-  Tv,
-  WashingMachine,
-  Wrench,
+  Watch,
 } from "lucide-react";
-import { PersonalItemIcon } from "@/components/icons";
 import { BannerCarousel } from "@/components/BannerCarousel";
 import { BottomNav } from "@/components/BottomNav";
 import { ShopCard } from "@/components/ShopCard";
-import { frequentSearches, shops, type CategorySlug } from "@/lib/shops";
+import { FilterBar } from "@/components/FilterBar";
+import {
+  filterAndSortShops,
+  frequentSearches,
+  type CategorySlug,
+} from "@/lib/shops";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -25,7 +31,7 @@ export const Route = createFileRoute("/home")({
       {
         name: "description",
         content:
-          "Browse repair categories and nearby trusted repair shops for motorcycles, phones, electronics and home appliances.",
+          "Browse repair categories and nearby trusted shops for bags, clothes, watches, shoes, keys and glasses.",
       },
       { property: "og:title", content: "Your Repair Home | Reparo" },
       {
@@ -40,28 +46,28 @@ export const Route = createFileRoute("/home")({
 type IconType = ComponentType<{ className?: string }>;
 
 const categories: { label: string; slug: CategorySlug; Icon: IconType }[] = [
-  { label: "Personal Item", slug: "personal-item", Icon: PersonalItemIcon },
-  { label: "Electronics", slug: "electronics", Icon: Tv },
-  { label: "Home Appliances", slug: "home-appliances", Icon: WashingMachine },
+  { label: "Bag", slug: "bag", Icon: Briefcase },
+  { label: "Clothes", slug: "clothes", Icon: Shirt },
+  { label: "Watches", slug: "watches", Icon: Watch },
+  { label: "Shoes", slug: "shoes", Icon: Footprints },
+  { label: "Keys", slug: "keys", Icon: KeyRound },
+  { label: "Glasses", slug: "glasses", Icon: Glasses },
 ];
 
-const nearby = [
-  "golden-motor-service",
-  "smart-phone-care",
-  "premium-shoe-bag-repair",
-  "homefix-appliance-service",
-].map((id) => shops.find((s) => s.id === id)!);
-
-const frequentIcons = [Bike, Wrench, Smartphone, Sparkles, PersonalItemIcon];
+const frequentIcons: IconType[] = [Scissors, Footprints, Watch, Shirt, KeyRound, Glasses];
 
 function HomeScreen() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
+  const [category, setCategory] = useState("all");
+  const [sort, setSort] = useState("nearest");
+
+  const nearby = filterAndSortShops({ category, sort }).slice(0, 6);
 
   const submit = (q: string) => {
     setFocused(false);
-    navigate({ to: "/search", search: { q } });
+    navigate({ to: "/search", search: { q, category: "all", sort: "none" } });
   };
 
   return (
@@ -138,8 +144,8 @@ function HomeScreen() {
             {categories.map(({ label, slug, Icon }) => (
               <Link
                 key={label}
-                to="/category/$categorySlug"
-                params={{ categorySlug: slug }}
+                to="/search"
+                search={{ q: "", category: slug, sort: "none" }}
                 className="card-soft flex flex-col items-center gap-2 px-2 py-5"
               >
                 <span className="flex size-10 items-center justify-center rounded-full bg-secondary">
@@ -174,15 +180,33 @@ function HomeScreen() {
         <section className="mt-8">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold">Nearby Repair Shops</h2>
-            <Link to="/search" search={{ q: "" }} className="text-xs font-medium text-muted-foreground">
+            <Link
+              to="/search"
+              search={{ q: "", category, sort }}
+              className="text-xs font-medium text-muted-foreground"
+            >
               See all
             </Link>
+          </div>
+
+          <div className="mt-4">
+            <FilterBar
+              category={category}
+              sort={sort}
+              onCategoryChange={setCategory}
+              onSortChange={setSort}
+            />
           </div>
 
           <div className="mt-4 space-y-4">
             {nearby.map((shop) => (
               <ShopCard key={shop.id} shop={shop} />
             ))}
+            {nearby.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                No shops match these filters right now.
+              </p>
+            )}
           </div>
         </section>
       </main>
