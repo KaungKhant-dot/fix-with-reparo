@@ -74,15 +74,24 @@ function SearchScreen() {
           ))}
         </div>
 
-        <p className="mt-6 text-xs text-muted-foreground">{results.length} results</p>
+        <p className="mt-6 text-xs text-muted-foreground">
+          {isLoading ? "Searching…" : `${results.length} results`}
+          {offline && " · offline, showing saved shops"}
+        </p>
         <div className="mt-3 space-y-4">
-          {results.map((shop) => (
-            <ShopCard key={shop.id} shop={shop} />
-          ))}
-          {results.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              No shops match these filters. Try clearing a filter.
-            </p>
+          {isLoading ? (
+            <ShopListSkeleton count={4} />
+          ) : (
+            <>
+              {results.map((shop) => (
+                <ShopCard key={shop.id} shop={shop} />
+              ))}
+              {results.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No shops match these filters. Try clearing a filter.
+                </p>
+              )}
+            </>
           )}
         </div>
       </main>
