@@ -21,6 +21,8 @@ import { FilterBar } from "@/components/FilterBar";
 import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { useCategories, useShops } from "@/lib/repair-data";
 import { frequentSearches } from "@/lib/shops";
+import { useAuth } from "@/lib/use-auth";
+
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -56,10 +58,12 @@ const frequentIcons: IconType[] = [Scissors, Footprints, Watch, Shirt, KeyRound,
 
 function HomeScreen() {
   const navigate = useNavigate();
+  const { fullName } = useAuth();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("nearest");
+
 
   const { data: categories = [] } = useCategories();
   const { shops, isLoading, offline } = useShops({ category, sort });
@@ -76,7 +80,8 @@ function HomeScreen() {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm opacity-80">Good morning 👋</p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight">Hey, Stella</h1>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight">Hello, {fullName || "User"}!</h1>
+
             <p className="mt-1 flex items-center gap-1 text-xs opacity-75">
               <MapPin className="size-3.5" />
               Mandalay&nbsp;

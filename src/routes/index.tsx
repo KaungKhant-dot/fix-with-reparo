@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, Phone, Wrench } from "lucide-react";
+import { Mail, Wrench } from "lucide-react";
 import { ReparoToolMark } from "@/components/icons";
 
 export const Route = createFileRoute("/")({
@@ -48,10 +48,10 @@ function Welcome() {
       </main>
 
       <div className="space-y-3">
-        <Link to="/home" className="btn-pill btn-primary">
+        <Link to="/auth" search={{ mode: "signup" }} className="btn-pill btn-primary">
           Get Started
         </Link>
-        <Link to="/home" className="btn-pill btn-outline">
+        <Link to="/auth" search={{ mode: "login" }} className="btn-pill btn-outline">
           Log In
         </Link>
 
@@ -61,17 +61,12 @@ function Welcome() {
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Link to="/home" className="btn-pill btn-outline">
-            <Mail className="size-4" />
-            Email
-          </Link>
-          <Link to="/home" className="btn-pill btn-outline">
-            <Phone className="size-4" />
-            Phone
-          </Link>
-        </div>
+        <Link to="/auth" search={{ mode: "signup" }} className="btn-pill btn-outline">
+          <Mail className="size-4" />
+          Email
+        </Link>
       </div>
+
     </div>
   );
 }
