@@ -73,7 +73,7 @@ function HomeScreen() {
             <h1 className="mt-1 text-2xl font-bold tracking-tight">Hey, Stella</h1>
             <p className="mt-1 flex items-center gap-1 text-xs opacity-75">
               <MapPin className="size-3.5" />
-              Riverside District
+              Mandalay&nbsp;
             </p>
           </div>
           <Link
