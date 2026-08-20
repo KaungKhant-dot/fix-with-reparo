@@ -54,18 +54,44 @@ function NotificationsScreen() {
       </header>
 
       <main className="space-y-3 px-6 pt-6">
-        {items.map((item) => (
-          <article key={item.title} className="card-soft flex gap-3 p-4">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary">
-              <item.Icon className="size-4 text-secondary-foreground" />
-            </span>
-            <div className="min-w-0">
-              <h2 className="text-sm font-bold">{item.title}</h2>
-              <p className="mt-1 text-xs text-muted-foreground">{item.body}</p>
-              <p className="mt-2 text-[11px] text-muted-foreground">{item.time}</p>
+        {isLoading &&
+          Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="card-soft flex gap-3 p-4">
+              <Skeleton className="size-9 shrink-0 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-3 w-full" />
+              </div>
             </div>
-          </article>
-        ))}
+          ))}
+
+        {isError && (
+          <p className="text-sm text-muted-foreground">
+            Couldn't load notifications. Check your connection and try again.
+          </p>
+        )}
+
+        {!isLoading && !isError && items.length === 0 && (
+          <p className="text-sm text-muted-foreground">No notifications yet.</p>
+        )}
+
+        {items.map((item) => {
+          const Icon = categoryIcons[item.categorySlug ?? ""] ?? CheckCircle2;
+          return (
+            <article key={item.id} className="card-soft flex gap-3 p-4">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary">
+                <Icon className="size-4 text-secondary-foreground" />
+              </span>
+              <div className="min-w-0">
+                <h2 className="text-sm font-bold">{item.title}</h2>
+                <p className="mt-1 text-xs text-muted-foreground">{item.message}</p>
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  {timeAgo(item.createdAt)}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </main>
 
       <BottomNav active="alerts" />
