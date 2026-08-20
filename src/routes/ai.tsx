@@ -4,6 +4,7 @@ import { MapPin, RotateCcw, Send, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { categoryLabels, type CategorySlug } from "@/lib/shops";
 import { useCreateRepairRequest, useShops } from "@/lib/repair-data";
+import { useAuth } from "@/lib/use-auth";
 import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
@@ -41,55 +42,57 @@ type Diagnosis = {
 const diagnoses: Diagnosis[] = [
   {
     id: "bag",
-    prompt: "The zipper on my leather bag is broken.",
+    prompt: "သားရေအိတ် ဇစ် ပျက်နေလို့ပါ",
     category: "bag",
     reply:
-      "Sounds like a jammed or split zipper slider. That's usually a slider swap — most bag specialists finish it same day.",
-    followUp: "Share your location and I'll list bag repair shops near you.",
+      "ဇစ်ခေါင်း (Slider) ကျွတ်တာ သို့မဟုတ် ဇစ်သွားဟနေတာ ဖြစ်နိုင်ပါတယ်။ ဇစ်ခေါင်းလဲရုံနဲ့ တင် အဆင်ပြေပြီး အိတ်ပြင်ဆိုင်အများစုမှာ တစ်ရက်တည်းနဲ့ အပြီးပြင်ပေးနိုင်ပါတယ်။",
+    followUp: "သင့်တည်နေရာကို မျှဝေပေးပါ၊ အနီးဆုံး အိတ်ပြင်ဆိုင်တွေကို ရှာပေးပါ့မယ်။",
   },
   {
     id: "clothes",
-    prompt: "My shirt is torn along the seam.",
+    prompt: "အင်္ကျီ ချုပ်ရိုး ပြေထွက်သွားလို့ပါ",
     category: "clothes",
     reply:
-      "A seam tear is a quick re-stitch. A tailor can also reinforce the surrounding seam so it doesn't reopen.",
-    followUp: "Share your location and I'll find tailoring shops nearby.",
+      "ချုပ်ရိုးပြေတာက ပြန်ချုပ်ရုံပဲမို့ ရိုးရှင်းပါတယ်။ အပ်ချုပ်ဆိုင်တွေမှာ မိနစ်ပိုင်းအတွင်း အမြန်ချုပ်ပေးနိုင်ပါတယ်။",
+    followUp: "သင့်တည်နေရာကို မျှဝေပေးပါ၊ အနီးဆုံး အထည်ချုပ်ဆိုင်တွေကို ရှာပေးပါ့မယ်။",
   },
   {
     id: "watches",
-    prompt: "My watch suddenly stopped working.",
+    prompt: "နာရီ ရုတ်တရက် ရပ်သွားလို့ပါ",
     category: "watches",
     reply:
-      "For a quartz watch this is almost always a dead battery; if it's mechanical it likely needs movement servicing.",
-    followUp: "Share your location and I'll show watch specialists close to you.",
+      "ဓာတ်ခဲကုန်သွားတာ သို့မဟုတ် စက်အတွင်း ပစ္စည်းတစ်ခုခု နေရာလွဲသွားတာ ဖြစ်နိုင်ပါတယ်။ ဓာတ်ခဲလဲတာက မိနစ်ပိုင်းပဲ ကြာပါတယ်။",
+    followUp: "သင့်တည်နေရာကို မျှဝေပေးပါ၊ အနီးဆုံး နာရီပြင်ဆိုင်တွေကို ရှာပေးပါ့မယ်။",
   },
   {
     id: "shoes",
-    prompt: "The sole of my shoe is cracked and peeling.",
+    prompt: "ဖိနပ်ခွာ ကွာပြီး ဟနေလို့ပါ",
     category: "shoes",
     reply:
-      "A cracked sole needs re-gluing or a full sole replacement — a cobbler can also add a protective heel tip.",
-    followUp: "Share your location and I'll list shoe repair shops nearby.",
+      "ဖိနပ်ကော်ပြယ်သွားတာ ဖြစ်နိုင်ပါတယ်။ ဖိနပ်ကော်သီးသန့်နဲ့ ပြန်ကပ်ခြင်း (သို့မဟုတ်) ဖိနပ်ဖဝါး (Sole) အသစ်လဲခြင်းဖြင့် ကောင်းကောင်း ပြန်သုံးနိုင်ပါတယ်။",
+    followUp: "သင့်တည်နေရာကို မျှဝေပေးပါ၊ အနီးဆုံး ဖိနပ်ပြင်ဆိုင်တွေကို ရှာပေးပါ့မယ်။",
   },
   {
     id: "keys",
-    prompt: "I need a duplicate key and my lock is sticking.",
+    prompt: "သော့တူ ကူးချင်လို့ပါ၊ သော့အိမ်ကလဲ ဖွင့်ရတာ ကျပ်နေတယ်",
     category: "keys",
     reply:
-      "Key cutting takes minutes; a sticking lock usually just needs cleaning or a rekey — bring the original key if you have it.",
-    followUp: "Share your location and I'll find locksmiths near you.",
+      "သော့တူကူးတာက မိနစ်ပိုင်းပဲ ကြာပါတယ်။ သော့အိမ်ကျပ်တာကတော့ ဂျီးဆေးချွတ်ရုံ (သို့) အတွင်းပင် အသစ်လဲရုံနဲ့ အဆင်ပြေပါတယ်။ မူရင်းသော့ ရှိရင် တစ်ခါတည်း ယူလာခဲ့ပါခင်ဗျာ။",
+    followUp: "သင့်တည်နေရာကို မျှဝေပေးပါ၊ အနီးဆုံး သော့ပြင်ဆိုင်တွေကို ရှာပေးပါ့မယ်။",
   },
   {
     id: "glasses",
-    prompt: "My glasses frame is bent and the hinge is loose.",
+    prompt: "မျက်မှန်ဘောင် ကောက်သွားပြီး ပတ္တာ ချောင်နေလို့ပါ",
     category: "glasses",
     reply:
-      "That's a frame realignment plus a hinge screw or hinge weld — an eyewear technician can do it while you wait.",
-    followUp: "Share your location and I'll show eyewear repair shops nearby.",
+      "မျက်မှန်ဘောင်ကို ပြန်ညှိပေးလို့ရသလို ပတ္တာချောင်တာကိုလည်း ဝက်အူအသစ်လဲပြီး မိနစ်ပိုင်းအတွင်း အမြန်ပြင်ဆင်နိုင်ပါတယ်။",
+    followUp: "သင့်တည်နေရာကို မျှဝေပေးပါ၊ အနီးဆုံး မျက်မှန်ပြင်ဆိုင်တွေကို ရှာပေးပါ့မယ်။",
   },
 ];
 
 function AiScreen() {
+  const { fullName } = useAuth();
+  const greeting = `Hi ${fullName || "မိတ်ဆွေ"} 👋 ဘာပစ္စည်းများ ပြုပြင်ချင်ပါသလဲ — အိတ်၊ အဝတ်အထည်၊ နာရီ၊ ဖိနပ်၊ သော့ ဒါမှမဟုတ် မျက်မှန်လားခင်ဗျာ။`;
   const [selected, setSelected] = useState<Diagnosis | null>(null);
   const [locationShared, setLocationShared] = useState(false);
   const createRequest = useCreateRepairRequest();
@@ -97,12 +100,7 @@ function AiScreen() {
     category: selected?.category ?? "all",
     sort: "nearest",
   });
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "ai",
-      text: "Hi Stella 👋 What needs repairing — a bag, clothes, a watch, shoes, keys or glasses?",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([{ role: "ai", text: greeting }]);
 
   const pick = (d: Diagnosis) => {
     setSelected(d);
@@ -143,12 +141,7 @@ function AiScreen() {
   const reset = () => {
     setSelected(null);
     setLocationShared(false);
-    setMessages([
-      {
-        role: "ai",
-        text: "Hi Stella 👋 What needs repairing — a bag, clothes, a watch, shoes, keys or glasses?",
-      },
-    ]);
+    setMessages([{ role: "ai", text: greeting }]);
   };
 
   const recommended = shops.filter((s) => s.isOpen).slice(0, 3);
@@ -162,7 +155,7 @@ function AiScreen() {
           </span>
           <div>
             <h1 className="text-xl font-bold tracking-tight">Reparo AI</h1>
-            <p className="text-xs opacity-80">Smart diagnosis for everyday repairs.</p>
+            <p className="text-xs opacity-80">နေ့စဉ်သုံးပစ္စည်း ပြုပြင်မှုများအတွက် အသုံးဝင်သော AI အကြံပေး</p>
           </div>
         </div>
       </header>
@@ -217,7 +210,7 @@ function AiScreen() {
           ) : !locationShared ? (
             <button onClick={shareLocation} className="btn-pill btn-primary">
               <MapPin className="size-4" />
-              Share my location
+              တည်နေရာမျှဝေပြီး အနီးဆုံးဆိုင်များ ရှာမည်
             </button>
           ) : (
             <>
