@@ -1,9 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Clock, MapPin, Phone, Star, Wrench } from "lucide-react";
-import { getShop } from "@/lib/shops";
-import { useShop, useCreateRepairRequest } from "@/lib/repair-data";
+import { ArrowLeft, CreditCard, MapPin, Phone, Star, Wrench } from "lucide-react";
+import { useShop } from "@/lib/repair-data";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import { StatusPill } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -13,12 +11,12 @@ export const Route = createFileRoute("/shop/$shopId")({
       { title: "Shop Details | Reparo" },
       {
         name: "description",
-        content: "See services, opening hours, ratings and contact details for this repair shop.",
+        content: "See services, ratings, payment methods and contact details for this repair shop.",
       },
       { property: "og:title", content: "Shop Details | Reparo" },
       {
         property: "og:description",
-        content: "Services, hours, ratings and contact details for trusted repair shops.",
+        content: "Services, ratings, payment methods and contact details for trusted repair shops.",
       },
     ],
   }),
@@ -27,25 +25,8 @@ export const Route = createFileRoute("/shop/$shopId")({
 
 function ShopDetails() {
   const { shopId } = Route.useParams();
-  const { data, isLoading } = useShop(shopId);
-  const createRequest = useCreateRepairRequest();
-  const shop = data ?? getShop(shopId);
+  const { data: shop, isLoading } = useShop(shopId);
 
-  const requestRepair = () => {
-    if (!shop) return;
-    createRequest.mutate(
-      {
-        shopId: data ? shop.id : null,
-        categorySlug: shop.category,
-        itemDescription: `${shop.categoryLabel} repair request for ${shop.name}`,
-        issueType: shop.services[0] ?? null,
-      },
-      {
-        onSuccess: () => toast.success("Repair request sent to the shop."),
-        onError: () => toast.error("Couldn't send the request. Please try again."),
-      },
-    );
-  };
 
   if (isLoading && !shop) {
     return (
