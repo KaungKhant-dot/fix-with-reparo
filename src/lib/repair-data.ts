@@ -2,7 +2,6 @@ import { useMutation, useQuery, type UseQueryResult } from "@tanstack/react-quer
 import { supabase } from "@/integrations/supabase/client";
 import {
   categoryLabels,
-  categorySlugs,
   shops as mockShops,
   type CategorySlug,
   type Shop,
@@ -23,12 +22,6 @@ export type NotificationItem = {
 
 /* -------------------------------- categories ------------------------------- */
 
-const fallbackCategories: Category[] = categorySlugs.map((slug) => ({
-  slug,
-  label: categoryLabels[slug],
-  icon: null,
-}));
-
 export function useCategories(): UseQueryResult<Category[]> {
   return useQuery({
     queryKey: ["categories"],
@@ -38,12 +31,10 @@ export function useCategories(): UseQueryResult<Category[]> {
         .select("slug, name, icon")
         .order("name");
       if (error) throw error;
-      const rows = (data ?? [])
+      return (data ?? [])
         .filter((c) => Boolean(c.slug))
         .map((c) => ({ slug: c.slug as string, label: c.name ?? c.slug, icon: c.icon ?? null }));
-      return rows.length ? rows : fallbackCategories;
     },
-    placeholderData: fallbackCategories,
     staleTime: 5 * 60_000,
   });
 }
@@ -65,34 +56,39 @@ type ShopRow = {
   address: string | null;
   image_url: string | null;
   phone: string | null;
+  payment_methods: string | null;
 };
+
+const shopColumns =
+  "id, name, category_slug, rating, distance, is_open, address, image_url, phone, payment_methods";
 
 /** Maps a database row onto the presentation `Shop` shape used across the UI. */
 function mapShop(row: ShopRow): Shop {
   const slug = (row.category_slug ?? "bag") as CategorySlug;
-  const template = mockShops.find((s) => s.category === slug);
   const distanceKm = parseDistance(row.distance);
   const ratingValue = Number(row.rating ?? 0);
+  const categoryImage = mockShops.find((s) => s.category === slug)?.image;
 
   return {
     id: row.id,
     name: row.name ?? "Repair shop",
     category: slug,
     categoryLabel: categoryLabels[slug] ?? slug,
-    desc: template?.desc ?? "Trusted local repair service",
+    desc: "",
     distanceKm,
     distance: row.distance ?? `${distanceKm.toFixed(1)} km`,
     ratingValue,
     rating: ratingValue.toFixed(1),
-    reviews: template?.reviews ?? "—",
+    reviews: "",
     isOpen: row.is_open ?? false,
     available: row.is_open ?? false,
-    services: template?.services ?? [],
-    address: row.address ?? "Mandalay",
+    services: [],
+    address: row.address ?? "",
     phone: row.phone ?? "",
-    hours: template?.hours ?? "Daily · 9:00 AM – 7:00 PM",
-    priceRange: template?.priceRange ?? "—",
-    image: template?.image ?? mockShops[0]!.image,
+    hours: "",
+    priceRange: "",
+    paymentMethods: row.payment_methods ?? "",
+    image: row.image_url ?? categoryImage ?? mockShops[0]!.image,
   };
 }
 
@@ -116,16 +112,14 @@ export function applyClientFilters(list: Shop[], { query = "", sort = "none" }: 
 }
 
 async function fetchShops(category: string): Promise<Shop[]> {
-  let q = supabase
-    .from("repair_shops")
-    .select("id, name, category_slug, rating, distance, is_open, address, image_url, phone");
+  let q = supabase.from("repair_shops").select(shopColumns);
   if (category && category !== "all") q = q.eq("category_slug", category);
   const { data, error } = await q;
   if (error) throw error;
   return (data ?? []).map((row) => mapShop(row as ShopRow));
 }
 
-/** Live shops with offline fallback to bundled demo data. */
+/** Live shops from Supabase, filtered and sorted on the client. */
 export function useShops(filters: ShopFilters = {}) {
   const category = filters.category ?? "all";
   const query = useQuery({
@@ -134,17 +128,13 @@ export function useShops(filters: ShopFilters = {}) {
     staleTime: 60_000,
   });
 
-  const offline = query.isError;
-  const base = offline
-    ? mockShops.filter((s) => category === "all" || s.category === category)
-    : (query.data ?? []);
-
   return {
-    shops: applyClientFilters(base, filters),
+    shops: applyClientFilters(query.data ?? [], filters),
     isLoading: query.isLoading,
-    offline,
+    offline: query.isError,
   };
 }
+
 
 export function useShop(shopId: string) {
   return useQuery({
@@ -152,7 +142,7 @@ export function useShop(shopId: string) {
     queryFn: async (): Promise<Shop | null> => {
       const { data, error } = await supabase
         .from("repair_shops")
-        .select("id, name, category_slug, rating, distance, is_open, address, image_url, phone")
+        .select(shopColumns)
         .eq("id", shopId)
         .maybeSingle();
       if (error) throw error;

@@ -7,7 +7,6 @@ import {
   Shirt,
   ShoppingBag,
   TicketPercent,
-  Truck,
   Watch,
 } from "lucide-react";
 
@@ -26,8 +25,8 @@ const iconSets: Record<
 > = {
   service: [ShoppingBag, Footprints, Watch, Shirt],
   promo: [TicketPercent],
-  delivery: [Truck],
 };
+
 
 function BannerSlideVisual({ style }: { style: BannerStyle }) {
   const icons = iconSets[style];
