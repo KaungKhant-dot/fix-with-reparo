@@ -150,44 +150,68 @@ function AuthScreen() {
             </Link>
           </div>
         ) : (
-          <form onSubmit={submit} className="mt-8 space-y-3">
+          <form onSubmit={submit} className="mt-8 space-y-4">
             {isSignup && (
-              <input
-                className={inputCls}
-                placeholder="Full name"
-                value={fullName}
-                autoComplete="name"
-                onChange={(e) => setFullName(e.target.value)}
-              />
+              <div className="space-y-1.5">
+                <label htmlFor="fullName" className="text-sm font-medium">
+                  Full Name
+                </label>
+                <input
+                  id="fullName"
+                  className={inputCls}
+                  placeholder="e.g. Aung Aung"
+                  value={fullName}
+                  autoComplete="name"
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
             )}
-            <input
-              className={inputCls}
-              type="email"
-              required
-              placeholder="Email"
-              value={email}
-              autoComplete="email"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              className={inputCls}
-              type="password"
-              required
-              placeholder="Password"
-              value={password}
-              autoComplete={isSignup ? "new-password" : "current-password"}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {isSignup && (
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-sm font-medium">
+                Email
+              </label>
               <input
+                id="email"
+                className={inputCls}
+                type="email"
+                required
+                placeholder="name@example.com"
+                value={email}
+                autoComplete="email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <input
+                id="password"
                 className={inputCls}
                 type="password"
                 required
-                placeholder="Confirm password"
-                value={confirm}
-                autoComplete="new-password"
-                onChange={(e) => setConfirm(e.target.value)}
+                placeholder={isSignup ? "Min. 6 characters" : "Your password"}
+                value={password}
+                autoComplete={isSignup ? "new-password" : "current-password"}
+                onChange={(e) => setPassword(e.target.value)}
               />
+            </div>
+            {isSignup && (
+              <div className="space-y-1.5">
+                <label htmlFor="confirm" className="text-sm font-medium">
+                  Confirm Password
+                </label>
+                <input
+                  id="confirm"
+                  className={inputCls}
+                  type="password"
+                  required
+                  placeholder="Re-enter your password"
+                  value={confirm}
+                  autoComplete="new-password"
+                  onChange={(e) => setConfirm(e.target.value)}
+                />
+              </div>
             )}
 
             <button type="submit" disabled={busy} className="btn-pill btn-primary mt-2">
@@ -195,6 +219,7 @@ function AuthScreen() {
               {isSignup ? "Create Account" : "Log In"}
             </button>
           </form>
+
         )}
       </main>
 
