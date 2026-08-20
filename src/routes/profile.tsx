@@ -52,7 +52,7 @@ function ProfileScreen() {
           </span>
           <div>
             <h1 className="text-xl font-bold tracking-tight">{fullName || "Guest"}</h1>
-            <p className="text-xs opacity-80">{user?.email ?? "Not signed in"}</p>
+            <p className="text-xs opacity-80">{email || "Not signed in"}</p>
           </div>
         </div>
       </header>
@@ -68,7 +68,7 @@ function ProfileScreen() {
           </button>
         ))}
 
-        {user ? (
+        {isAuthenticated ? (
           <button onClick={signOut} className="btn-pill btn-outline mt-6">
             Log Out
           </button>
