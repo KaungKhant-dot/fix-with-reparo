@@ -82,7 +82,9 @@ function ShopDetails() {
           <span className="flex items-center gap-1 font-semibold">
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.rating}
-            <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
+            {shop.reviews && (
+              <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
+            )}
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
             <MapPin className="size-3.5" />
@@ -90,39 +92,43 @@ function ShopDetails() {
           </span>
         </div>
 
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{shop.desc}</p>
+        {shop.paymentMethods && (
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-semibold text-secondary-foreground">
+            <CreditCard className="size-3.5" />
+            {shop.paymentMethods}
+          </span>
+        )}
 
-        <section className="mt-6">
-          <h2 className="text-sm font-bold">Services</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {shop.services.map((s) => (
-              <span
-                key={s}
-                className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground"
-              >
-                <Wrench className="size-3" />
-                {s}
-              </span>
-            ))}
-          </div>
-        </section>
+        {shop.desc && (
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{shop.desc}</p>
+        )}
+
+        {shop.services.length > 0 && (
+          <section className="mt-6">
+            <h2 className="text-sm font-bold">Services</h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {shop.services.map((s) => (
+                <span
+                  key={s}
+                  className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground"
+                >
+                  <Wrench className="size-3" />
+                  {s}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-6 space-y-3">
           <h2 className="text-sm font-bold">Shop Info</h2>
           <InfoRow Icon={MapPin} label="Address" value={shop.address} />
           <InfoRow Icon={Phone} label="Phone" value={shop.phone} />
-          <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />
+          {shop.paymentMethods && (
+            <InfoRow Icon={CreditCard} label="Payment methods" value={shop.paymentMethods} />
+          )}
         </section>
 
-        <button
-          type="button"
-          onClick={requestRepair}
-          disabled={createRequest.isPending}
-          className="btn-pill btn-primary mt-8 w-full disabled:opacity-60"
-        >
-          <Wrench className="size-4" />
-          {createRequest.isPending ? "Sending request…" : "Request Repair"}
-        </button>
 
         <a
           href={`tel:${shop.phone.replace(/\s/g, "")}`}
