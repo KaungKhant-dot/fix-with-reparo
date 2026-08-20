@@ -18,11 +18,9 @@ import { BannerCarousel } from "@/components/BannerCarousel";
 import { BottomNav } from "@/components/BottomNav";
 import { ShopCard } from "@/components/ShopCard";
 import { FilterBar } from "@/components/FilterBar";
-import {
-  filterAndSortShops,
-  frequentSearches,
-  type CategorySlug,
-} from "@/lib/shops";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
+import { useCategories, useShops } from "@/lib/repair-data";
+import { frequentSearches } from "@/lib/shops";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -45,14 +43,14 @@ export const Route = createFileRoute("/home")({
 
 type IconType = ComponentType<{ className?: string }>;
 
-const categories: { label: string; slug: CategorySlug; Icon: IconType }[] = [
-  { label: "Bag", slug: "bag", Icon: Briefcase },
-  { label: "Clothes", slug: "clothes", Icon: Shirt },
-  { label: "Watches", slug: "watches", Icon: Watch },
-  { label: "Shoes", slug: "shoes", Icon: Footprints },
-  { label: "Keys", slug: "keys", Icon: KeyRound },
-  { label: "Glasses", slug: "glasses", Icon: Glasses },
-];
+const categoryIcons: Record<string, IconType> = {
+  bag: Briefcase,
+  clothes: Shirt,
+  watches: Watch,
+  shoes: Footprints,
+  keys: KeyRound,
+  glasses: Glasses,
+};
 
 const frequentIcons: IconType[] = [Scissors, Footprints, Watch, Shirt, KeyRound, Glasses];
 
@@ -63,7 +61,9 @@ function HomeScreen() {
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("nearest");
 
-  const nearby = filterAndSortShops({ category, sort }).slice(0, 6);
+  const { data: categories = [] } = useCategories();
+  const { shops, isLoading, offline } = useShops({ category, sort });
+  const nearby = shops.slice(0, 6);
 
   const submit = (q: string) => {
     setFocused(false);
@@ -141,9 +141,11 @@ function HomeScreen() {
         <section className="mt-8">
           <h2 className="text-base font-bold">Categories</h2>
           <div className="mt-4 grid grid-cols-3 gap-3">
-            {categories.map(({ label, slug, Icon }) => (
+            {categories.map(({ label, slug }) => {
+              const Icon = categoryIcons[slug] ?? Sparkles;
+              return (
               <Link
-                key={label}
+                key={slug}
                 to="/search"
                 search={{ q: "", category: slug, sort: "none" }}
                 className="card-soft flex flex-col items-center gap-2 px-2 py-5"
@@ -153,7 +155,8 @@ function HomeScreen() {
                 </span>
                 <span className="text-center text-xs font-medium">{label}</span>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -199,13 +202,24 @@ function HomeScreen() {
           </div>
 
           <div className="mt-4 space-y-4">
-            {nearby.map((shop) => (
-              <ShopCard key={shop.id} shop={shop} />
-            ))}
-            {nearby.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                No shops match these filters right now.
+            {offline && (
+              <p className="text-xs text-muted-foreground">
+                Offline — showing saved shops.
               </p>
+            )}
+            {isLoading ? (
+              <ShopListSkeleton />
+            ) : (
+              <>
+                {nearby.map((shop) => (
+                  <ShopCard key={shop.id} shop={shop} />
+                ))}
+                {nearby.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    No shops match these filters right now.
+                  </p>
+                )}
+              </>
             )}
           </div>
         </section>

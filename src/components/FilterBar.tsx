@@ -1,4 +1,4 @@
-import { categoryLabels, categorySlugs } from "@/lib/shops";
+import { useCategories } from "@/lib/repair-data";
 import { cn } from "@/lib/utils";
 
 const sorts = [
@@ -18,16 +18,19 @@ export function FilterBar({
   onCategoryChange: (next: string) => void;
   onSortChange: (next: string) => void;
 }) {
+  const { data: categories = [] } = useCategories();
+  const chips = [{ slug: "all", label: "All" }, ...categories];
+
   return (
     <div className="space-y-3">
       <div className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {["all", ...categorySlugs].map((slug) => {
-          const active = category === slug;
+        {chips.map((c) => {
+          const active = category === c.slug;
           return (
             <button
-              key={slug}
+              key={c.slug}
               type="button"
-              onClick={() => onCategoryChange(slug)}
+              onClick={() => onCategoryChange(c.slug)}
               className={cn(
                 "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors",
                 active
@@ -35,7 +38,7 @@ export function FilterBar({
                   : "bg-secondary text-secondary-foreground",
               )}
             >
-              {slug === "all" ? "All" : categoryLabels[slug as keyof typeof categoryLabels]}
+              {c.label}
             </button>
           );
         })}

@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { categoryLabels, shopsByCategory, type CategorySlug } from "@/lib/shops";
+import { categoryLabels, type CategorySlug } from "@/lib/shops";
+import { useShops } from "@/lib/repair-data";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -25,7 +27,7 @@ export const Route = createFileRoute("/category/$categorySlug")({
 function CategoryScreen() {
   const { categorySlug } = Route.useParams();
   const label = categoryLabels[categorySlug as CategorySlug] ?? "Repair";
-  const list = shopsByCategory(categorySlug);
+  const { shops: list, isLoading } = useShops({ category: categorySlug, sort: "nearest" });
 
   return (
     <div className="app-shell relative pb-28">
@@ -46,7 +48,9 @@ function CategoryScreen() {
       </header>
 
       <main className="space-y-4 px-6 pt-6">
-        {list.length === 0 ? (
+        {isLoading ? (
+          <ShopListSkeleton />
+        ) : list.length === 0 ? (
           <p className="text-sm text-muted-foreground">No shops in this category yet.</p>
         ) : (
           list.map((shop) => <ShopCard key={shop.id} shop={shop} />)

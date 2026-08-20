@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { MapPin, RotateCcw, Send, Sparkles } from "lucide-react";
-import { categoryLabels, filterAndSortShops, type CategorySlug } from "@/lib/shops";
+import { toast } from "sonner";
+import { categoryLabels, type CategorySlug } from "@/lib/shops";
+import { useCreateRepairRequest, useShops } from "@/lib/repair-data";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -89,6 +92,11 @@ const diagnoses: Diagnosis[] = [
 function AiScreen() {
   const [selected, setSelected] = useState<Diagnosis | null>(null);
   const [locationShared, setLocationShared] = useState(false);
+  const createRequest = useCreateRepairRequest();
+  const { shops, isLoading: shopsLoading } = useShops({
+    category: selected?.category ?? "all",
+    sort: "nearest",
+  });
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "ai",
@@ -118,6 +126,18 @@ function AiScreen() {
         text: `Here are the top ${categoryLabels[selected.category]} repair shops open near you right now.`,
       },
     ]);
+
+    createRequest.mutate(
+      {
+        categorySlug: selected.category,
+        itemDescription: selected.prompt,
+        issueType: selected.id,
+      },
+      {
+        onSuccess: () => toast.success("Saved your repair request."),
+        onError: () => toast.error("Couldn't save your request right now."),
+      },
+    );
   };
 
   const reset = () => {
@@ -131,11 +151,7 @@ function AiScreen() {
     ]);
   };
 
-  const recommended = selected
-    ? filterAndSortShops({ category: selected.category, sort: "nearest" })
-        .filter((s) => s.isOpen)
-        .slice(0, 3)
-    : [];
+  const recommended = shops.filter((s) => s.isOpen).slice(0, 3);
 
   return (
     <div className="app-shell relative pb-32">
@@ -167,13 +183,19 @@ function AiScreen() {
           ))}
         </div>
 
-        {locationShared && recommended.length > 0 && (
+        {locationShared && (
           <section className="mt-8">
             <h2 className="text-base font-bold">Recommended Shops</h2>
             <div className="mt-4 space-y-4">
-              {recommended.map((shop) => (
-                <ShopCard key={shop.id} shop={shop} />
-              ))}
+              {shopsLoading ? (
+                <ShopListSkeleton />
+              ) : recommended.length > 0 ? (
+                recommended.map((shop) => <ShopCard key={shop.id} shop={shop} />)
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No open shops in this category right now — try again later.
+                </p>
+              )}
             </div>
           </section>
         )}

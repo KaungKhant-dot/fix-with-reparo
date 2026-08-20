@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search as SearchIcon } from "lucide-react";
-import { filterAndSortShops, frequentSearches } from "@/lib/shops";
+import { frequentSearches } from "@/lib/shops";
+import { useShops } from "@/lib/repair-data";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { FilterBar } from "@/components/FilterBar";
 import { BottomNav } from "@/components/BottomNav";
@@ -31,7 +33,7 @@ export const Route = createFileRoute("/search")({
 function SearchScreen() {
   const { q, category, sort } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const results = filterAndSortShops({ query: q, category, sort });
+  const { shops: results, isLoading, offline } = useShops({ query: q, category, sort });
 
   const update = (patch: Record<string, string>) =>
     navigate({ to: ".", search: (prev) => ({ ...prev, ...patch }) });
@@ -72,15 +74,24 @@ function SearchScreen() {
           ))}
         </div>
 
-        <p className="mt-6 text-xs text-muted-foreground">{results.length} results</p>
+        <p className="mt-6 text-xs text-muted-foreground">
+          {isLoading ? "Searching…" : `${results.length} results`}
+          {offline && " · offline, showing saved shops"}
+        </p>
         <div className="mt-3 space-y-4">
-          {results.map((shop) => (
-            <ShopCard key={shop.id} shop={shop} />
-          ))}
-          {results.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              No shops match these filters. Try clearing a filter.
-            </p>
+          {isLoading ? (
+            <ShopListSkeleton count={4} />
+          ) : (
+            <>
+              {results.map((shop) => (
+                <ShopCard key={shop.id} shop={shop} />
+              ))}
+              {results.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No shops match these filters. Try clearing a filter.
+                </p>
+              )}
+            </>
           )}
         </div>
       </main>

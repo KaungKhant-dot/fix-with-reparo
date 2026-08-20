@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Clock, MapPin, Phone, Star, Wrench } from "lucide-react";
 import { getShop } from "@/lib/shops";
+import { useShop, useCreateRepairRequest } from "@/lib/repair-data";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import { StatusPill } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -24,7 +27,36 @@ export const Route = createFileRoute("/shop/$shopId")({
 
 function ShopDetails() {
   const { shopId } = Route.useParams();
-  const shop = getShop(shopId);
+  const { data, isLoading } = useShop(shopId);
+  const createRequest = useCreateRepairRequest();
+  const shop = data ?? getShop(shopId);
+
+  const requestRepair = () => {
+    if (!shop) return;
+    createRequest.mutate(
+      {
+        shopId: data ? shop.id : null,
+        categorySlug: shop.category,
+        itemDescription: `${shop.categoryLabel} repair request for ${shop.name}`,
+        issueType: shop.services[0] ?? null,
+      },
+      {
+        onSuccess: () => toast.success("Repair request sent to the shop."),
+        onError: () => toast.error("Couldn't send the request. Please try again."),
+      },
+    );
+  };
+
+  if (isLoading && !shop) {
+    return (
+      <div className="app-shell space-y-4 p-6">
+        <Skeleton className="h-48 w-full rounded-2xl" />
+        <Skeleton className="h-5 w-2/3" />
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-24 w-full rounded-2xl" />
+      </div>
+    );
+  }
 
   if (!shop) {
     return (
@@ -101,7 +133,20 @@ function ShopDetails() {
           <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />
         </section>
 
-        <a href={`tel:${shop.phone.replace(/\s/g, "")}`} className="btn-pill btn-primary mt-8">
+        <button
+          type="button"
+          onClick={requestRepair}
+          disabled={createRequest.isPending}
+          className="btn-pill btn-primary mt-8 w-full disabled:opacity-60"
+        >
+          <Wrench className="size-4" />
+          {createRequest.isPending ? "Sending request…" : "Request Repair"}
+        </button>
+
+        <a
+          href={`tel:${shop.phone.replace(/\s/g, "")}`}
+          className="btn-pill mt-3 w-full border border-border bg-card text-foreground"
+        >
           <Phone className="size-4" />
           Call Shop
         </a>
