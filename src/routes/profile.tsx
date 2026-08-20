@@ -31,14 +31,15 @@ const rows = [
 ];
 
 function ProfileScreen() {
-  const { user, fullName, initials } = useAuth();
+  const { isAuthenticated, email, fullName, initials } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const signOut = async () => {
+    clearLocalUser();
     await queryClient.cancelQueries();
     queryClient.clear();
-    await supabase.auth.signOut();
+    void supabase.auth.signOut().catch(() => undefined);
     navigate({ to: "/", replace: true });
   };
 
