@@ -129,10 +129,9 @@ function ShopDetails() {
           )}
         </section>
 
-
         <a
           href={`tel:${shop.phone.replace(/\s/g, "")}`}
-          className="btn-pill mt-3 w-full border border-border bg-card text-foreground"
+          className="btn-pill btn-primary mt-8 w-full"
         >
           <Phone className="size-4" />
           Call Shop
