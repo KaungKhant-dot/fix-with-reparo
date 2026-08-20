@@ -146,11 +146,7 @@ function AiScreen() {
     ]);
   };
 
-  const recommended = selected
-    ? filterAndSortShops({ category: selected.category, sort: "nearest" })
-        .filter((s) => s.isOpen)
-        .slice(0, 3)
-    : [];
+  const recommended = shops.filter((s) => s.isOpen).slice(0, 3);
 
   return (
     <div className="app-shell relative pb-32">
