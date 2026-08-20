@@ -202,13 +202,24 @@ function HomeScreen() {
           </div>
 
           <div className="mt-4 space-y-4">
-            {nearby.map((shop) => (
-              <ShopCard key={shop.id} shop={shop} />
-            ))}
-            {nearby.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                No shops match these filters right now.
+            {offline && (
+              <p className="text-xs text-muted-foreground">
+                Offline — showing saved shops.
               </p>
+            )}
+            {isLoading ? (
+              <ShopListSkeleton />
+            ) : (
+              <>
+                {nearby.map((shop) => (
+                  <ShopCard key={shop.id} shop={shop} />
+                ))}
+                {nearby.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    No shops match these filters right now.
+                  </p>
+                )}
+              </>
             )}
           </div>
         </section>
