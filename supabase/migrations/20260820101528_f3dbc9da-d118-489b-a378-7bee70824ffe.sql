@@ -1,0 +1,10 @@
+GRANT SELECT ON public.categories TO anon, authenticated;
+GRANT ALL ON public.categories TO service_role;
+GRANT SELECT ON public.repair_shops TO anon, authenticated;
+GRANT ALL ON public.repair_shops TO service_role;
+GRANT SELECT ON public.services TO anon, authenticated;
+GRANT ALL ON public.services TO service_role;
+GRANT SELECT, INSERT, UPDATE ON public.notifications TO anon, authenticated;
+GRANT ALL ON public.notifications TO service_role;
+GRANT SELECT, INSERT, UPDATE ON public.repair_requests TO anon, authenticated;
+GRANT ALL ON public.repair_requests TO service_role;
