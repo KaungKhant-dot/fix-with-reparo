@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin, Star } from "lucide-react";
+import { Clock, MapPin, Star } from "lucide-react";
 import type { Shop } from "@/lib/shops";
 
 export function ShopCard({ shop }: { shop: Shop }) {
@@ -25,18 +25,24 @@ export function ShopCard({ shop }: { shop: Shop }) {
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
           {shop.categoryLabel} Repair{shop.desc ? ` · ${shop.desc}` : ""}
         </p>
-        <div className="mt-2 flex items-center gap-4 text-xs">
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-center gap-1 font-semibold">
-            <Star className="size-3.5 fill-accent text-accent" />
             {shop.rating}
+            <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
-              <span className="font-normal text-muted-foreground">({shop.reviews})</span>
+              <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
             )}
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
             <MapPin className="size-3.5" />
             {shop.distance}
           </span>
+          {shop.hours && (
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Clock className="size-3.5" />
+              {shop.hours}
+            </span>
+          )}
         </div>
       </div>
     </Link>

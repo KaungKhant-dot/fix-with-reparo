@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, CreditCard, MapPin, Phone, Star, Wrench } from "lucide-react";
+import { ArrowLeft, Clock, CreditCard, MapPin, Phone, Star, Wrench } from "lucide-react";
 import { useShop } from "@/lib/repair-data";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusPill } from "@/components/ShopCard";
@@ -78,10 +78,10 @@ function ShopDetails() {
           <StatusPill available={shop.available} />
         </div>
 
-        <div className="mt-3 flex items-center gap-4 text-xs">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-center gap-1 font-semibold">
-            <Star className="size-3.5 fill-accent text-accent" />
             {shop.rating}
+            <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
               <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
             )}
@@ -90,6 +90,12 @@ function ShopDetails() {
             <MapPin className="size-3.5" />
             {shop.distance} away
           </span>
+          {shop.hours && (
+            <span className="flex items-center gap-1 text-muted-foreground">
+              <Clock className="size-3.5" />
+              {shop.hours}
+            </span>
+          )}
         </div>
 
         {shop.paymentMethods && (
@@ -123,6 +129,7 @@ function ShopDetails() {
         <section className="mt-6 space-y-3">
           <h2 className="text-sm font-bold">Shop Info</h2>
           <InfoRow Icon={MapPin} label="Address" value={shop.address} />
+          {shop.hours && <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />}
           <InfoRow Icon={Phone} label="Phone" value={shop.phone} />
           {shop.paymentMethods && (
             <InfoRow Icon={CreditCard} label="Payment methods" value={shop.paymentMethods} />

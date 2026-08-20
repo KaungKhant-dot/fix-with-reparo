@@ -51,16 +51,17 @@ type ShopRow = {
   name: string | null;
   category_slug: string | null;
   rating: number | string | null;
+  reviews_count: number | null;
   distance: string | null;
   is_open: boolean | null;
+  opening_hours: string | null;
   address: string | null;
-  image_url: string | null;
   phone: string | null;
   payment_methods: string | null;
 };
 
 const shopColumns =
-  "id, name, category_slug, rating, distance, is_open, address, image_url, phone, payment_methods";
+  "id, name, category_slug, rating, reviews_count, distance, is_open, opening_hours, address, phone, payment_methods";
 
 /** Maps a database row onto the presentation `Shop` shape used across the UI. */
 function mapShop(row: ShopRow): Shop {
@@ -79,16 +80,16 @@ function mapShop(row: ShopRow): Shop {
     distance: row.distance ?? `${distanceKm.toFixed(1)} km`,
     ratingValue,
     rating: ratingValue.toFixed(1),
-    reviews: "",
+    reviews: row.reviews_count != null ? String(row.reviews_count) : "",
     isOpen: row.is_open ?? false,
     available: row.is_open ?? false,
     services: [],
     address: row.address ?? "",
     phone: row.phone ?? "",
-    hours: "",
+    hours: row.opening_hours ?? "",
     priceRange: "",
     paymentMethods: row.payment_methods ?? "",
-    image: row.image_url ?? categoryImage ?? mockShops[0]!.image,
+    image: categoryImage ?? mockShops[0]!.image,
   };
 }
 
@@ -147,13 +148,7 @@ export function useShop(shopId: string) {
         .maybeSingle();
       if (error) throw error;
       if (!data) return null;
-      const shop = mapShop(data as ShopRow);
-      const { data: services } = await supabase
-        .from("services")
-        .select("name")
-        .eq("shop_id", shopId);
-      const names = (services ?? []).map((s) => s.name).filter(Boolean) as string[];
-      return names.length ? { ...shop, services: names } : shop;
+      return mapShop(data as ShopRow);
     },
   });
 }
