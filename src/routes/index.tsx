@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Mail, Phone, Wrench } from "lucide-react";
-import toolsIcon from "@/assets/tools-icon.png";
+import { ReparoToolMark } from "@/components/icons";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,7 +36,7 @@ function Welcome() {
 
       <main className="flex flex-1 flex-col items-center justify-center py-10 text-center">
         <div className="flex size-36 items-center justify-center rounded-full bg-secondary">
-          <img src={toolsIcon} alt="Wrench and hammer" width={512} height={512} className="size-20" />
+          <ReparoToolMark className="size-20" />
         </div>
         <h1 className="mt-8 text-3xl font-bold leading-tight tracking-tight">
           Find. Repair.
