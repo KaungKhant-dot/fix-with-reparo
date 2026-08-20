@@ -80,16 +80,16 @@ function mapShop(row: ShopRow): Shop {
     distance: row.distance ?? `${distanceKm.toFixed(1)} km`,
     ratingValue,
     rating: ratingValue.toFixed(1),
-    reviews: "",
+    reviews: row.reviews_count != null ? String(row.reviews_count) : "",
     isOpen: row.is_open ?? false,
     available: row.is_open ?? false,
     services: [],
     address: row.address ?? "",
     phone: row.phone ?? "",
-    hours: "",
+    hours: row.opening_hours ?? "",
     priceRange: "",
     paymentMethods: row.payment_methods ?? "",
-    image: row.image_url ?? categoryImage ?? mockShops[0]!.image,
+    image: categoryImage ?? mockShops[0]!.image,
   };
 }
 
@@ -148,13 +148,7 @@ export function useShop(shopId: string) {
         .maybeSingle();
       if (error) throw error;
       if (!data) return null;
-      const shop = mapShop(data as ShopRow);
-      const { data: services } = await supabase
-        .from("services")
-        .select("name")
-        .eq("shop_id", shopId);
-      const names = (services ?? []).map((s) => s.name).filter(Boolean) as string[];
-      return names.length ? { ...shop, services: names } : shop;
+      return mapShop(data as ShopRow);
     },
   });
 }
