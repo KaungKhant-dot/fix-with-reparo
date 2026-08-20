@@ -203,9 +203,19 @@ function HomeScreen() {
 
           <div className="mt-4 space-y-4">
             {offline && (
-              <p className="text-xs text-muted-foreground">
-                Offline — showing saved shops.
-              </p>
+              <div className="card-soft flex items-center justify-between gap-3 p-3">
+                <p className="text-xs text-muted-foreground">
+                  Couldn&apos;t reach the network — showing saved shops.
+                </p>
+                <button
+                  type="button"
+                  onClick={retry}
+                  disabled={isFetching}
+                  className="shrink-0 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+                >
+                  {isFetching ? "Retrying…" : "Retry"}
+                </button>
+              </div>
             )}
             {isLoading ? (
               <ShopListSkeleton />
