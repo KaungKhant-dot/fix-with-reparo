@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { MapPin, RotateCcw, Send, Sparkles } from "lucide-react";
-import { filterAndSortShops, type CategorySlug } from "@/lib/shops";
+import { categoryLabels, filterAndSortShops, type CategorySlug } from "@/lib/shops";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -115,7 +115,7 @@ function AiScreen() {
       { role: "user", text: "Shared location: Mandalay" },
       {
         role: "ai",
-        text: `Here are the top ${selected.categoryLabelText} repair shops open near you right now.`,
+        text: `Here are the top ${categoryLabels[selected.category]} repair shops open near you right now.`,
       },
     ]);
   };
