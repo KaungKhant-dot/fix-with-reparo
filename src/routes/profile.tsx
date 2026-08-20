@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight, Heart, MapPin, Settings, Wrench } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/use-auth";
+import { clearLocalUser, useAuth } from "@/lib/use-auth";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -31,14 +31,15 @@ const rows = [
 ];
 
 function ProfileScreen() {
-  const { user, fullName, initials } = useAuth();
+  const { isAuthenticated, email, fullName, initials } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const signOut = async () => {
+    clearLocalUser();
     await queryClient.cancelQueries();
     queryClient.clear();
-    await supabase.auth.signOut();
+    void supabase.auth.signOut().catch(() => undefined);
     navigate({ to: "/", replace: true });
   };
 
@@ -51,7 +52,7 @@ function ProfileScreen() {
           </span>
           <div>
             <h1 className="text-xl font-bold tracking-tight">{fullName || "Guest"}</h1>
-            <p className="text-xs opacity-80">{user?.email ?? "Not signed in"}</p>
+            <p className="text-xs opacity-80">{email || "Not signed in"}</p>
           </div>
         </div>
       </header>
@@ -67,7 +68,7 @@ function ProfileScreen() {
           </button>
         ))}
 
-        {user ? (
+        {isAuthenticated ? (
           <button onClick={signOut} className="btn-pill btn-outline mt-6">
             Log Out
           </button>
