@@ -39,9 +39,7 @@ function Welcome() {
           <ReparoToolMark className="size-20" />
         </div>
         <h1 className="mt-8 text-3xl font-bold leading-tight tracking-tight">
-          Find. Repair.
-          <br />
-          Get Moving.
+          Find & Repair.
         </h1>
         <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
           Trusted repair shops for your bags, clothes, watches, shoes, keys and glasses — matched
