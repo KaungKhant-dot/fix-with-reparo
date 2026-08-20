@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Clock, MapPin, Phone, Star, Wrench } from "lucide-react";
 import { getShop } from "@/lib/shops";
 import { StatusPill } from "@/components/ShopCard";
@@ -133,5 +133,3 @@ function InfoRow({
     </div>
   );
 }
-
-export { notFound };
