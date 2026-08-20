@@ -62,7 +62,7 @@ export function StatusPill({ available }: { available: boolean }) {
       }`}
     >
       <span className={`size-1.5 rounded-full ${available ? "bg-success" : "bg-muted-foreground"}`} />
-      {available ? "Available" : "Closed"}
+      {available ? "ဆိုင်ဖွင့်" : "ဆိုင်ပိတ်"}
     </span>
   );
 }
