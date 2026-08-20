@@ -28,6 +28,7 @@ const iconSets: Record<
 > = {
   service: [ShoppingBag, Footprints, Watch, Shirt],
   promo: [TicketPercent],
+  revive: [Recycle, Wrench],
 };
 
 

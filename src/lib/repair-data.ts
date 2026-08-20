@@ -51,16 +51,17 @@ type ShopRow = {
   name: string | null;
   category_slug: string | null;
   rating: number | string | null;
+  reviews_count: number | null;
   distance: string | null;
   is_open: boolean | null;
+  opening_hours: string | null;
   address: string | null;
-  image_url: string | null;
   phone: string | null;
   payment_methods: string | null;
 };
 
 const shopColumns =
-  "id, name, category_slug, rating, distance, is_open, address, image_url, phone, payment_methods";
+  "id, name, category_slug, rating, reviews_count, distance, is_open, opening_hours, address, phone, payment_methods";
 
 /** Maps a database row onto the presentation `Shop` shape used across the UI. */
 function mapShop(row: ShopRow): Shop {
