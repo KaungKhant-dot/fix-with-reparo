@@ -141,9 +141,11 @@ function HomeScreen() {
         <section className="mt-8">
           <h2 className="text-base font-bold">Categories</h2>
           <div className="mt-4 grid grid-cols-3 gap-3">
-            {categories.map(({ label, slug, Icon }) => (
+            {categories.map(({ label, slug }) => {
+              const Icon = categoryIcons[slug] ?? Sparkles;
+              return (
               <Link
-                key={label}
+                key={slug}
                 to="/search"
                 search={{ q: "", category: slug, sort: "none" }}
                 className="card-soft flex flex-col items-center gap-2 px-2 py-5"
