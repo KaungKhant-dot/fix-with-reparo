@@ -39,7 +39,6 @@ export const Route = createFileRoute("/home")({
 type IconType = ComponentType<{ className?: string }>;
 
 const categories: { label: string; slug: CategorySlug; Icon: IconType }[] = [
-  { label: "Motorcycle", slug: "motorcycle", Icon: Bike },
   { label: "Personal Item", slug: "personal-item", Icon: PersonalItemIcon },
   { label: "Electronics", slug: "electronics", Icon: Tv },
   { label: "Home Appliances", slug: "home-appliances", Icon: WashingMachine },
