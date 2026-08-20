@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { categoryLabels, type CategorySlug } from "@/lib/shops";
+import { categoryShopLabels, type CategorySlug } from "@/lib/shops";
 import { useShops } from "@/lib/repair-data";
 import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/category/$categorySlug")({
 
 function CategoryScreen() {
   const { categorySlug } = Route.useParams();
-  const label = categoryLabels[categorySlug as CategorySlug] ?? "Repair";
+  const label = categoryShopLabels[categorySlug as CategorySlug] ?? "ပြင်ဆိုင်";
   const { shops: list, isLoading } = useShops({ category: categorySlug, sort: "nearest" });
 
   return (
@@ -41,8 +41,8 @@ function CategoryScreen() {
             <ArrowLeft className="size-5" />
           </Link>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">{label} Repair</h1>
-            <p className="text-xs opacity-80">{list.length} shops near you</p>
+            <h1 className="text-xl font-bold tracking-tight">{label}</h1>
+            <p className="text-xs opacity-80">သင့်အနီးတွင် ဆိုင် {list.length} ဆိုင်</p>
           </div>
         </div>
       </header>
@@ -51,7 +51,7 @@ function CategoryScreen() {
         {isLoading ? (
           <ShopListSkeleton />
         ) : list.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No shops in this category yet.</p>
+          <p className="text-sm text-muted-foreground">ဤအမျိုးအစားတွင် ဆိုင်မရှိသေးပါ။</p>
         ) : (
           list.map((shop) => <ShopCard key={shop.id} shop={shop} />)
         )}
