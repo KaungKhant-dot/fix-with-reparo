@@ -1,0 +1,137 @@
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ArrowLeft, Clock, MapPin, Phone, Star, Wrench } from "lucide-react";
+import { getShop } from "@/lib/shops";
+import { StatusPill } from "@/components/ShopCard";
+import { BottomNav } from "@/components/BottomNav";
+
+export const Route = createFileRoute("/shop/$shopId")({
+  head: () => ({
+    meta: [
+      { title: "Shop Details | Reparo" },
+      {
+        name: "description",
+        content: "See services, opening hours, ratings and contact details for this repair shop.",
+      },
+      { property: "og:title", content: "Shop Details | Reparo" },
+      {
+        property: "og:description",
+        content: "Services, hours, ratings and contact details for trusted repair shops.",
+      },
+    ],
+  }),
+  component: ShopDetails,
+});
+
+function ShopDetails() {
+  const { shopId } = Route.useParams();
+  const shop = getShop(shopId);
+
+  if (!shop) {
+    return (
+      <div className="app-shell flex flex-col items-center justify-center gap-4 px-6 py-20 text-center">
+        <p className="text-sm text-muted-foreground">This shop is no longer listed.</p>
+        <Link to="/home" className="btn-pill btn-primary">
+          Back to Home
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app-shell relative pb-32">
+      <div className="relative">
+        <img
+          src={shop.image}
+          alt={shop.name}
+          width={512}
+          height={512}
+          className="h-56 w-full object-cover"
+        />
+        <Link
+          to="/home"
+          aria-label="Back"
+          className="absolute left-4 top-4 flex size-10 items-center justify-center rounded-full bg-card shadow-[var(--shadow-soft)]"
+        >
+          <ArrowLeft className="size-5" />
+        </Link>
+      </div>
+
+      <main className="-mt-6 rounded-t-3xl bg-background px-6 pt-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">{shop.name}</h1>
+            <p className="mt-1 text-xs text-muted-foreground">{shop.categoryLabel} Repair</p>
+          </div>
+          <StatusPill available={shop.available} />
+        </div>
+
+        <div className="mt-3 flex items-center gap-4 text-xs">
+          <span className="flex items-center gap-1 font-semibold">
+            <Star className="size-3.5 fill-accent text-accent" />
+            {shop.rating}
+            <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
+          </span>
+          <span className="flex items-center gap-1 text-muted-foreground">
+            <MapPin className="size-3.5" />
+            {shop.distance} away
+          </span>
+        </div>
+
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{shop.desc}</p>
+
+        <section className="mt-6">
+          <h2 className="text-sm font-bold">Services</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {shop.services.map((s) => (
+              <span
+                key={s}
+                className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground"
+              >
+                <Wrench className="size-3" />
+                {s}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-6 space-y-3">
+          <h2 className="text-sm font-bold">Shop Info</h2>
+          <InfoRow Icon={MapPin} label="Address" value={shop.address} />
+          <InfoRow Icon={Phone} label="Phone" value={shop.phone} />
+          <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />
+        </section>
+
+        <a href={`tel:${shop.phone.replace(/\s/g, "")}`} className="btn-pill btn-primary mt-8">
+          <Phone className="size-4" />
+          Call Shop
+        </a>
+      </main>
+
+      <BottomNav active="home" />
+    </div>
+  );
+}
+
+function InfoRow({
+  Icon,
+  label,
+  value,
+}: {
+  Icon: typeof MapPin;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="card-soft flex items-start gap-3 p-3">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary">
+        <Icon className="size-4 text-secondary-foreground" />
+      </span>
+      <div className="min-w-0">
+        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+        <p className="text-sm font-medium">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+export { notFound };
