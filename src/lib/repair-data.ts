@@ -115,36 +115,14 @@ export function applyClientFilters(list: Shop[], { query = "", sort = "none" }: 
   return out;
 }
 
-/** Rejects if the request takes longer than `ms` so the UI never hangs. */
-function withTimeout<T>(promise: PromiseLike<T>, ms = 8000): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("Request timed out")), ms);
-    Promise.resolve(promise).then(
-      (value) => {
-        clearTimeout(timer);
-        resolve(value);
-      },
-      (err) => {
-        clearTimeout(timer);
-        reject(err);
-      },
-    );
-  });
-}
-
 async function fetchShops(category: string): Promise<Shop[]> {
-  try {
-    let q = supabase
-      .from("repair_shops")
-      .select("id, name, category_slug, rating, distance, is_open, address, image_url, phone");
-    if (category && category !== "all") q = q.eq("category_slug", category);
-    const { data, error } = await withTimeout(q);
-    if (error) throw new Error(error.message);
-    return (data ?? []).map((row) => mapShop(row as ShopRow));
-  } catch (err) {
-    console.error("[repair_shops] fetch failed", err);
-    throw err instanceof Error ? err : new Error("Failed to load repair shops");
-  }
+  let q = supabase
+    .from("repair_shops")
+    .select("id, name, category_slug, rating, distance, is_open, address, image_url, phone");
+  if (category && category !== "all") q = q.eq("category_slug", category);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []).map((row) => mapShop(row as ShopRow));
 }
 
 /** Live shops with offline fallback to bundled demo data. */
@@ -154,8 +132,6 @@ export function useShops(filters: ShopFilters = {}) {
     queryKey: ["repair_shops", category],
     queryFn: () => fetchShops(category),
     staleTime: 60_000,
-    retry: 2,
-    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 4000),
   });
 
   const offline = query.isError;
@@ -166,10 +142,7 @@ export function useShops(filters: ShopFilters = {}) {
   return {
     shops: applyClientFilters(base, filters),
     isLoading: query.isLoading,
-    isFetching: query.isFetching,
     offline,
-    error: query.error as Error | null,
-    retry: () => void query.refetch(),
   };
 }
 
