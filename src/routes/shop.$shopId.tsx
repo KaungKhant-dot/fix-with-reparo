@@ -129,6 +129,7 @@ function ShopDetails() {
         <section className="mt-6 space-y-3">
           <h2 className="text-sm font-bold">Shop Info</h2>
           <InfoRow Icon={MapPin} label="Address" value={shop.address} />
+          {shop.hours && <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />}
           <InfoRow Icon={Phone} label="Phone" value={shop.phone} />
           {shop.paymentMethods && (
             <InfoRow Icon={CreditCard} label="Payment methods" value={shop.paymentMethods} />
