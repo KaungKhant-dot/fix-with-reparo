@@ -23,7 +23,8 @@ export function ShopCard({ shop }: { shop: Shop }) {
           <StatusPill available={shop.available} />
         </div>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          {shop.categoryLabel} Repair{shop.desc ? ` · ${shop.desc}` : ""}
+          {categoryShopLabels[shop.category] ?? shop.categoryLabel}
+          {shop.desc ? ` · ${shop.desc}` : ""}
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-center gap-1 font-semibold">
