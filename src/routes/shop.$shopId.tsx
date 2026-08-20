@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Clock, CreditCard, MapPin, Phone, Star, Wrench } from "lucide-react";
 import { useShop } from "@/lib/repair-data";
+import { categoryShopLabels } from "@/lib/shops";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusPill } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
@@ -73,7 +74,9 @@ function ShopDetails() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="text-xl font-bold tracking-tight">{shop.name}</h1>
-            <p className="mt-1 text-xs text-muted-foreground">{shop.categoryLabel} Repair</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {categoryShopLabels[shop.category] ?? shop.categoryLabel}
+            </p>
           </div>
           <StatusPill available={shop.available} />
         </div>
@@ -83,12 +86,14 @@ function ShopDetails() {
             {shop.rating}
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
-              <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
+              <span className="font-normal text-muted-foreground">
+                ({shop.reviews} သုံးသပ်ချက်)
+              </span>
             )}
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
             <MapPin className="size-3.5" />
-            {shop.distance} away
+            {shop.distance} အကွာ
           </span>
           {shop.hours && (
             <span className="flex items-center gap-1 text-muted-foreground">
@@ -111,7 +116,7 @@ function ShopDetails() {
 
         {shop.services.length > 0 && (
           <section className="mt-6">
-            <h2 className="text-sm font-bold">Services</h2>
+            <h2 className="text-sm font-bold">ဝန်ဆောင်မှုများ</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {shop.services.map((s) => (
                 <span
@@ -127,12 +132,12 @@ function ShopDetails() {
         )}
 
         <section className="mt-6 space-y-3">
-          <h2 className="text-sm font-bold">Shop Info</h2>
-          <InfoRow Icon={MapPin} label="Address" value={shop.address} />
-          {shop.hours && <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />}
-          <InfoRow Icon={Phone} label="Phone" value={shop.phone} />
+          <h2 className="text-sm font-bold">ဆိုင်အချက်အလက်</h2>
+          <InfoRow Icon={MapPin} label="လိပ်စာ" value={shop.address} />
+          {shop.hours && <InfoRow Icon={Clock} label="ဖွင့်ချိန်" value={shop.hours} />}
+          <InfoRow Icon={Phone} label="ဖုန်း" value={shop.phone} />
           {shop.paymentMethods && (
-            <InfoRow Icon={CreditCard} label="Payment methods" value={shop.paymentMethods} />
+            <InfoRow Icon={CreditCard} label="ငွေပေးချေမှု" value={shop.paymentMethods} />
           )}
         </section>
 
@@ -141,7 +146,7 @@ function ShopDetails() {
           className="btn-pill btn-primary mt-8 w-full"
         >
           <Phone className="size-4" />
-          Call Shop
+          ဆိုင်ကို ဖုန်းဆက်မည်
         </a>
       </main>
 

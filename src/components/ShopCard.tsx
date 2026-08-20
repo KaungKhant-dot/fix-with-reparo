@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Clock, MapPin, Star } from "lucide-react";
-import type { Shop } from "@/lib/shops";
+import { categoryShopLabels, type Shop } from "@/lib/shops";
 
 export function ShopCard({ shop }: { shop: Shop }) {
   return (
@@ -23,14 +23,17 @@ export function ShopCard({ shop }: { shop: Shop }) {
           <StatusPill available={shop.available} />
         </div>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          {shop.categoryLabel} Repair{shop.desc ? ` · ${shop.desc}` : ""}
+          {categoryShopLabels[shop.category] ?? shop.categoryLabel}
+          {shop.desc ? ` · ${shop.desc}` : ""}
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
           <span className="flex items-center gap-1 font-semibold">
             {shop.rating}
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
-              <span className="font-normal text-muted-foreground">({shop.reviews} reviews)</span>
+              <span className="font-normal text-muted-foreground">
+                ({shop.reviews} သုံးသပ်ချက်)
+              </span>
             )}
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
@@ -59,7 +62,7 @@ export function StatusPill({ available }: { available: boolean }) {
       }`}
     >
       <span className={`size-1.5 rounded-full ${available ? "bg-success" : "bg-muted-foreground"}`} />
-      {available ? "Available" : "Closed"}
+      {available ? "ဆိုင်ဖွင့်" : "ဆိုင်ပိတ်"}
     </span>
   );
 }

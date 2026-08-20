@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { MapPin, RotateCcw, Send, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { categoryLabels, type CategorySlug } from "@/lib/shops";
+import { categoryShopLabels, type CategorySlug } from "@/lib/shops";
 import { useCreateRepairRequest, useShops } from "@/lib/repair-data";
 import { useAuth } from "@/lib/use-auth";
 import { ShopListSkeleton } from "@/components/ShopListSkeleton";
@@ -118,10 +118,10 @@ function AiScreen() {
     setLocationShared(true);
     setMessages((m) => [
       ...m,
-      { role: "user", text: "Shared location: Mandalay" },
+      { role: "user", text: "တည်နေရာ: Mandalay" },
       {
         role: "ai",
-        text: `Here are the top ${categoryLabels[selected.category]} repair shops open near you right now.`,
+        text: `သင်နဲ့ အနီးဆုံး အကောင်းဆုံး ${categoryShopLabels[selected.category]} တွေကို ရှာတွေ့ပါပြီခင်ဗျာ။`,
       },
     ]);
 
@@ -178,7 +178,7 @@ function AiScreen() {
 
         {locationShared && (
           <section className="mt-8">
-            <h2 className="text-base font-bold">Recommended Shops</h2>
+            <h2 className="text-base font-bold">အကြံပြုထားသော ဆိုင်များ</h2>
             <div className="mt-4 space-y-4">
               {shopsLoading ? (
                 <ShopListSkeleton />
@@ -186,7 +186,7 @@ function AiScreen() {
                 recommended.map((shop) => <ShopCard key={shop.id} shop={shop} />)
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No open shops in this category right now — try again later.
+                  ဤအမျိုးအစားတွင် လက်ရှိ ဖွင့်ထားသောဆိုင် မရှိသေးပါ — နောက်မှ ပြန်ကြည့်ပါ။
                 </p>
               )}
             </div>
@@ -215,11 +215,11 @@ function AiScreen() {
           ) : (
             <>
               <p className="text-center text-xs text-muted-foreground">
-                Tap a shop to view full details.
+                ဆိုင်တစ်ခုကို နှိပ်၍ အသေးစိတ်ကြည့်နိုင်ပါတယ်။
               </p>
               <button onClick={reset} className="btn-pill btn-primary">
                 <RotateCcw className="size-4" />
-                Ask about something else
+                နောက်တစ်ခု မေးမည်
               </button>
             </>
           )}
