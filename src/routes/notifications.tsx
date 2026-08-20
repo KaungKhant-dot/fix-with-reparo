@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bell, CheckCircle2, Footprints, KeyRound, Sparkles, Watch } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useNotifications } from "@/lib/repair-data";
 
 export const Route = createFileRoute("/notifications")({
   head: () => ({
