@@ -27,7 +27,7 @@ export const Route = createFileRoute("/category/$categorySlug")({
 function CategoryScreen() {
   const { categorySlug } = Route.useParams();
   const label = categoryLabels[categorySlug as CategorySlug] ?? "Repair";
-  const list = shopsByCategory(categorySlug);
+  const { shops: list, isLoading } = useShops({ category: categorySlug, sort: "nearest" });
 
   return (
     <div className="app-shell relative pb-28">
