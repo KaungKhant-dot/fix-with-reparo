@@ -155,7 +155,8 @@ function HomeScreen() {
                 </span>
                 <span className="text-center text-xs font-medium">{label}</span>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
 
