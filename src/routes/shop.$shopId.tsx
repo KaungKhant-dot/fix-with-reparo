@@ -74,7 +74,9 @@ function ShopDetails() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="text-xl font-bold tracking-tight">{shop.name}</h1>
-            <p className="mt-1 text-xs text-muted-foreground">{shop.categoryLabel} Repair</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {categoryShopLabels[shop.category] ?? shop.categoryLabel}
+            </p>
           </div>
           <StatusPill available={shop.available} />
         </div>
