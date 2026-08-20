@@ -1,19 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search as SearchIcon } from "lucide-react";
-import { frequentSearches, searchShops } from "@/lib/shops";
+import { filterAndSortShops, frequentSearches } from "@/lib/shops";
 import { ShopCard } from "@/components/ShopCard";
+import { FilterBar } from "@/components/FilterBar";
 import { BottomNav } from "@/components/BottomNav";
 
 export const Route = createFileRoute("/search")({
   validateSearch: (search: Record<string, unknown>) => ({
     q: typeof search["q"] === "string" ? (search["q"] as string) : "",
+    category: typeof search["category"] === "string" ? (search["category"] as string) : "all",
+    sort: typeof search["sort"] === "string" ? (search["sort"] as string) : "none",
   }),
   head: () => ({
     meta: [
       { title: "Search Repair Shops | Reparo" },
       {
         name: "description",
-        content: "Search motorcycle, phone, electronics, appliance and personal item repair shops.",
+        content: "Search bag, clothes, watch, shoe, key and glasses repair shops near you.",
       },
       { property: "og:title", content: "Search Repair Shops | Reparo" },
       {
@@ -26,9 +29,12 @@ export const Route = createFileRoute("/search")({
 });
 
 function SearchScreen() {
-  const { q } = Route.useSearch();
+  const { q, category, sort } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const results = searchShops(q);
+  const results = filterAndSortShops({ query: q, category, sort });
+
+  const update = (patch: Record<string, string>) =>
+    navigate({ to: ".", search: (prev) => ({ ...prev, ...patch }) });
 
   return (
     <div className="app-shell relative pb-28">
@@ -39,9 +45,7 @@ function SearchScreen() {
           <input
             value={q}
             autoFocus
-            onChange={(e) =>
-              navigate({ to: ".", search: (prev) => ({ ...prev, q: e.target.value }) })
-            }
+            onChange={(e) => update({ q: e.target.value })}
             placeholder="Search shops or services"
             className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
@@ -49,11 +53,18 @@ function SearchScreen() {
       </header>
 
       <main className="px-6 pt-6">
-        <div className="flex flex-wrap gap-2">
+        <FilterBar
+          category={category}
+          sort={sort}
+          onCategoryChange={(next) => update({ category: next })}
+          onSortChange={(next) => update({ sort: next })}
+        />
+
+        <div className="mt-5 flex flex-wrap gap-2">
           {frequentSearches.map((f) => (
             <button
               key={f.label}
-              onClick={() => navigate({ to: ".", search: (prev) => ({ ...prev, q: f.query }) })}
+              onClick={() => update({ q: f.query })}
               className="rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground"
             >
               {f.label}
@@ -66,6 +77,11 @@ function SearchScreen() {
           {results.map((shop) => (
             <ShopCard key={shop.id} shop={shop} />
           ))}
+          {results.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No shops match these filters. Try clearing a filter.
+            </p>
+          )}
         </div>
       </main>
 

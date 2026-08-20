@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, CheckCircle2, Sparkles, Wrench } from "lucide-react";
+import { Bell, CheckCircle2, Footprints, KeyRound, Sparkles, Watch } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 
 export const Route = createFileRoute("/notifications")({
@@ -23,20 +23,32 @@ export const Route = createFileRoute("/notifications")({
 const items = [
   {
     Icon: CheckCircle2,
-    title: "Golden Motor Service is available now",
-    body: "They accept walk-ins until 7:00 PM today.",
+    title: "Your leather bag repair is ready",
+    body: "Master Leather & Bag Spa finished the zipper replacement.",
     time: "12 min ago",
+  },
+  {
+    Icon: Watch,
+    title: "Watch battery replacement completed",
+    body: "Precision Watch & Horology · pick up before 7:00 PM.",
+    time: "1 hr ago",
+  },
+  {
+    Icon: Footprints,
+    title: "Shoe resoling in progress",
+    body: "Pro Sole Shoe Repair expects it ready tomorrow afternoon.",
+    time: "3 hrs ago",
+  },
+  {
+    Icon: KeyRound,
+    title: "24/7 Apex Lock & Key replied",
+    body: "Transponder key duplication takes about 45 minutes.",
+    time: "Yesterday",
   },
   {
     Icon: Sparkles,
     title: "Reparo AI found 3 matches",
-    body: "Motorcycle engine issue — shops within 1 km.",
-    time: "1 hr ago",
-  },
-  {
-    Icon: Wrench,
-    title: "Premium Shoe & Bag Repair replied",
-    body: "Leather resoling takes about 2 days.",
+    body: "Bent glasses frame — shops within 1 km of Mandalay.",
     time: "Yesterday",
   },
 ];

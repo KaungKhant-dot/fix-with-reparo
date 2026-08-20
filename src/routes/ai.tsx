@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { MapPin, Send, Sparkles } from "lucide-react";
-import { shops } from "@/lib/shops";
+import { MapPin, RotateCcw, Send, Sparkles } from "lucide-react";
+import { categoryLabels, filterAndSortShops, type CategorySlug } from "@/lib/shops";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/ai")({
       {
         name: "description",
         content:
-          "Describe your repair problem and Reparo AI recommends nearby specialists in seconds.",
+          "Describe your repair problem and Reparo AI recommends nearby bag, clothes, watch, shoe, key and glasses specialists.",
       },
       { property: "og:title", content: "Reparo AI Assistant | Reparo" },
       {
@@ -26,46 +26,116 @@ export const Route = createFileRoute("/ai")({
 
 type Message = { role: "user" | "ai"; text: string };
 
-/** Deterministic scripted demo flow — no AI API. */
-const script: { user: string; ai: string }[] = [
+/** Deterministic scripted diagnoses — no AI API. */
+type Diagnosis = {
+  id: string;
+  prompt: string;
+  category: CategorySlug;
+  reply: string;
+  followUp: string;
+};
+
+const diagnoses: Diagnosis[] = [
   {
-    user: "My motorcycle broke down and won't start.",
-    ai: "I can help you find a motorcycle repair service. Can you tell me what happened?",
+    id: "bag",
+    prompt: "The zipper on my leather bag is broken.",
+    category: "bag",
+    reply:
+      "Sounds like a jammed or split zipper slider. That's usually a slider swap — most bag specialists finish it same day.",
+    followUp: "Share your location and I'll list bag repair shops near you.",
   },
   {
-    user: "The engine suddenly stopped.",
-    ai: "Please share your location so I can find nearby repair shops.",
+    id: "clothes",
+    prompt: "My shirt is torn along the seam.",
+    category: "clothes",
+    reply:
+      "A seam tear is a quick re-stitch. A tailor can also reinforce the surrounding seam so it doesn't reopen.",
+    followUp: "Share your location and I'll find tailoring shops nearby.",
+  },
+  {
+    id: "watches",
+    prompt: "My watch suddenly stopped working.",
+    category: "watches",
+    reply:
+      "For a quartz watch this is almost always a dead battery; if it's mechanical it likely needs movement servicing.",
+    followUp: "Share your location and I'll show watch specialists close to you.",
+  },
+  {
+    id: "shoes",
+    prompt: "The sole of my shoe is cracked and peeling.",
+    category: "shoes",
+    reply:
+      "A cracked sole needs re-gluing or a full sole replacement — a cobbler can also add a protective heel tip.",
+    followUp: "Share your location and I'll list shoe repair shops nearby.",
+  },
+  {
+    id: "keys",
+    prompt: "I need a duplicate key and my lock is sticking.",
+    category: "keys",
+    reply:
+      "Key cutting takes minutes; a sticking lock usually just needs cleaning or a rekey — bring the original key if you have it.",
+    followUp: "Share your location and I'll find locksmiths near you.",
+  },
+  {
+    id: "glasses",
+    prompt: "My glasses frame is bent and the hinge is loose.",
+    category: "glasses",
+    reply:
+      "That's a frame realignment plus a hinge screw or hinge weld — an eyewear technician can do it while you wait.",
+    followUp: "Share your location and I'll show eyewear repair shops nearby.",
   },
 ];
 
-const recommended = shops.filter((s) => s.category === "motorcycle" && s.available).slice(0, 3);
-
 function AiScreen() {
-  const [step, setStep] = useState(0);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: "Hi Stella 👋 Describe your problem and I'll find the right specialist." },
-  ]);
+  const [selected, setSelected] = useState<Diagnosis | null>(null);
   const [locationShared, setLocationShared] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "ai",
+      text: "Hi Stella 👋 What needs repairing — a bag, clothes, a watch, shoes, keys or glasses?",
+    },
+  ]);
 
-  const next = script[step];
-
-  const sendNext = () => {
-    if (!next) return;
-    setMessages((m) => [...m, { role: "user", text: next.user }, { role: "ai", text: next.ai }]);
-    setStep((s) => s + 1);
+  const pick = (d: Diagnosis) => {
+    setSelected(d);
+    setLocationShared(false);
+    setMessages((m) => [
+      ...m,
+      { role: "user", text: d.prompt },
+      { role: "ai", text: d.reply },
+      { role: "ai", text: d.followUp },
+    ]);
   };
 
   const shareLocation = () => {
+    if (!selected) return;
     setLocationShared(true);
     setMessages((m) => [
       ...m,
-      { role: "user", text: "Shared location: Riverside District" },
+      { role: "user", text: "Shared location: Mandalay" },
       {
         role: "ai",
-        text: "Thanks! Here are 3 motorcycle repair shops available near you right now.",
+        text: `Here are the top ${categoryLabels[selected.category]} repair shops open near you right now.`,
       },
     ]);
   };
+
+  const reset = () => {
+    setSelected(null);
+    setLocationShared(false);
+    setMessages([
+      {
+        role: "ai",
+        text: "Hi Stella 👋 What needs repairing — a bag, clothes, a watch, shoes, keys or glasses?",
+      },
+    ]);
+  };
+
+  const recommended = selected
+    ? filterAndSortShops({ category: selected.category, sort: "nearest" })
+        .filter((s) => s.isOpen)
+        .slice(0, 3)
+    : [];
 
   return (
     <div className="app-shell relative pb-32">
@@ -76,7 +146,7 @@ function AiScreen() {
           </span>
           <div>
             <h1 className="text-xl font-bold tracking-tight">Reparo AI</h1>
-            <p className="text-xs opacity-80">Describe the problem — we find the specialist.</p>
+            <p className="text-xs opacity-80">Smart diagnosis for everyday repairs.</p>
           </div>
         </div>
       </header>
@@ -97,7 +167,7 @@ function AiScreen() {
           ))}
         </div>
 
-        {locationShared && (
+        {locationShared && recommended.length > 0 && (
           <section className="mt-8">
             <h2 className="text-base font-bold">Recommended Shops</h2>
             <div className="mt-4 space-y-4">
@@ -108,21 +178,35 @@ function AiScreen() {
           </section>
         )}
 
-        <div className="mt-8">
-          {next ? (
-            <button onClick={sendNext} className="btn-pill btn-primary">
-              <Send className="size-4" />
-              {next.user}
-            </button>
+        <div className="mt-8 space-y-3">
+          {!selected ? (
+            <div className="flex flex-wrap gap-2">
+              {diagnoses.map((d) => (
+                <button
+                  key={d.id}
+                  onClick={() => pick(d)}
+                  className="flex items-center gap-1.5 rounded-full bg-secondary px-3.5 py-2 text-xs font-semibold text-secondary-foreground"
+                >
+                  <Send className="size-3.5" />
+                  {d.prompt}
+                </button>
+              ))}
+            </div>
           ) : !locationShared ? (
             <button onClick={shareLocation} className="btn-pill btn-primary">
               <MapPin className="size-4" />
               Share my location
             </button>
           ) : (
-            <p className="text-center text-xs text-muted-foreground">
-              Tap a shop to view full details.
-            </p>
+            <>
+              <p className="text-center text-xs text-muted-foreground">
+                Tap a shop to view full details.
+              </p>
+              <button onClick={reset} className="btn-pill btn-primary">
+                <RotateCcw className="size-4" />
+                Ask about something else
+              </button>
+            </>
           )}
         </div>
       </main>
