@@ -133,7 +133,20 @@ function ShopDetails() {
           <InfoRow Icon={Clock} label="Opening hours" value={shop.hours} />
         </section>
 
-        <a href={`tel:${shop.phone.replace(/\s/g, "")}`} className="btn-pill btn-primary mt-8">
+        <button
+          type="button"
+          onClick={requestRepair}
+          disabled={createRequest.isPending}
+          className="btn-pill btn-primary mt-8 w-full disabled:opacity-60"
+        >
+          <Wrench className="size-4" />
+          {createRequest.isPending ? "Sending request…" : "Request Repair"}
+        </button>
+
+        <a
+          href={`tel:${shop.phone.replace(/\s/g, "")}`}
+          className="btn-pill mt-3 w-full border border-border bg-card text-foreground"
+        >
           <Phone className="size-4" />
           Call Shop
         </a>
