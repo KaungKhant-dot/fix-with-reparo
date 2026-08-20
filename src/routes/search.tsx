@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { Search as SearchIcon } from "lucide-react";
 import { frequentSearches, searchShops } from "@/lib/shops";
 import { ShopCard } from "@/components/ShopCard";
