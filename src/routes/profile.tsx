@@ -37,7 +37,7 @@ function ProfileScreen() {
           </span>
           <div>
             <h1 className="text-xl font-bold tracking-tight">Stella Aung</h1>
-            <p className="text-xs opacity-80">Riverside District, Yangon</p>
+            <p className="text-xs opacity-80">Mandalay</p>
           </div>
         </div>
       </header>
