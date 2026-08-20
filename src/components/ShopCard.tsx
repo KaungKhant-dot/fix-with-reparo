@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Clock, MapPin, Star } from "lucide-react";
-import type { Shop } from "@/lib/shops";
+import { categoryShopLabels, type Shop } from "@/lib/shops";
 
 export function ShopCard({ shop }: { shop: Shop }) {
   return (
