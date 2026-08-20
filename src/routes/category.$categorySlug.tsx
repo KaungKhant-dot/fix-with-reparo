@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { categoryLabels, shopsByCategory, type CategorySlug } from "@/lib/shops";
+import { categoryLabels, type CategorySlug } from "@/lib/shops";
+import { useShops } from "@/lib/repair-data";
+import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { ShopCard } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
 
