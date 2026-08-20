@@ -27,7 +27,36 @@ export const Route = createFileRoute("/shop/$shopId")({
 
 function ShopDetails() {
   const { shopId } = Route.useParams();
-  const shop = getShop(shopId);
+  const { data, isLoading } = useShop(shopId);
+  const createRequest = useCreateRepairRequest();
+  const shop = data ?? getShop(shopId);
+
+  const requestRepair = () => {
+    if (!shop) return;
+    createRequest.mutate(
+      {
+        shopId: data ? shop.id : null,
+        categorySlug: shop.category,
+        itemDescription: `${shop.categoryLabel} repair request for ${shop.name}`,
+        issueType: shop.services[0] ?? null,
+      },
+      {
+        onSuccess: () => toast.success("Repair request sent to the shop."),
+        onError: () => toast.error("Couldn't send the request. Please try again."),
+      },
+    );
+  };
+
+  if (isLoading && !shop) {
+    return (
+      <div className="app-shell space-y-4 p-6">
+        <Skeleton className="h-48 w-full rounded-2xl" />
+        <Skeleton className="h-5 w-2/3" />
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-24 w-full rounded-2xl" />
+      </div>
+    );
+  }
 
   if (!shop) {
     return (
