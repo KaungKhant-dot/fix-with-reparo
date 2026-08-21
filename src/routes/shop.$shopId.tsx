@@ -177,4 +177,118 @@ function InfoRow({
       </div>
     </div>
   );
+function StarRating({ stars }: { stars: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) =>
+        i < stars ? (
+          <Star key={i} className="size-4 fill-accent text-accent" />
+        ) : (
+          <Star key={i} className="size-4 text-muted-foreground" />
+        ),
+      )}
+    </div>
+  );
+}
+
+type Review = {
+  text: string;
+  time: string;
+  stars: number;
+};
+
+const categoryReviews: Record<CategorySlug, Review[]> = {
+  bag: [
+    {
+      text: "ဇစ်ခေါင်းလဲတာ မိနစ်ပိုင်းပဲကြာတယ်၊ အိတ်က အသစ်လိုဖြစ်သွားရော။",
+      time: "1 week ago",
+      stars: 5,
+    },
+    {
+      text: "သားရေအိတ် အစွန်းတွေကို သေချာဆေးပေးတယ်၊ ဈေးလည်း သင့်ပါတယ်။",
+      time: "2 weeks ago",
+      stars: 4,
+    },
+  ],
+  clothes: [
+    {
+      text: "အင်္ကျီချုပ်ရိုးပြေတာကို သေသပ်အောင် ပြန်ချုပ်ပေးတယ်။",
+      time: "1 week ago",
+      stars: 5,
+    },
+    {
+      text: "ချုပ်ရိုးတွေ တည့်တည့်မတ်မတ် ချုပ်ပေးတယ်။",
+      time: "2 weeks ago",
+      stars: 5,
+    },
+  ],
+  watches: [
+    {
+      text: "နာရီလက်တံ ညှိတာ ချက်ချင်းပြီးတယ်။",
+      time: "1 week ago",
+      stars: 5,
+    },
+    {
+      text: "ကိုယ့်မျက်စိရှေ့တင် ဓာတ်ခဲအသစ်သုံးပေးတယ်။ စိတ်ချရတယ်။",
+      time: "2 weeks ago",
+      stars: 4,
+    },
+  ],
+  shoes: [
+    {
+      text: "ဖိနပ်ဖဝါး(ဖိနပ်ခွာ) အသစ်လဲလိုက်တာ လမ်းလျှောက်ရတာ အရမ်းသက်သာသွားတယ်။",
+      time: "1 week ago",
+      stars: 5,
+    },
+    {
+      text: "ကော်ကပ်တာ အရမ်းသေသပ်တယ်၊ မကွာတော့ဘူး။ ဘယ်အချိန်ပြီးမယ် အချိန်အတိအကျ ပြောပေးတော့ ကျနော့်အတွက် အဆင်ပြေတယ်။",
+      time: "2 weeks ago",
+      stars: 4,
+    },
+  ],
+  keys: [
+    {
+      text: "သော့ နဲ့ ပတ်သက်တဲ့ ပြဿနာ‌တွေ ချက်ချင်း‌ဖြေရှင်းနိုင်တယ်။ ဆိုင်ပိုင်ရှင်ကလဲ ယဉ်ကျေးပြီး ဝန်ဆောင်မှုကောင်းတယ်।",
+      time: "1 week ago",
+      stars: 5,
+    },
+    {
+      text: "သော့အိမ်က သံချေးတက်နေတာကို အကောင်းအတိုင်း ပြန်သုံးနိုင်‌အောင် ပြင်ပေးသွားတယ်။",
+      time: "2 weeks ago",
+      stars: 5,
+    },
+  ],
+  glasses: [
+    {
+      text: "မျက်မှန်ဘောင်ကို သေချာညှိပေးသွားတယ်။",
+      time: "1 week ago",
+      stars: 5,
+    },
+    {
+      text: "မျက်မှန်ကိုင်းဝက်အူအသစ်လဲတာ ချက်ချင်းပြီးတယ်။",
+      time: "2 weeks ago",
+      stars: 4,
+    },
+  ],
+};
+
+function ReviewsSection({ category }: { category: CategorySlug }) {
+  const reviews = categoryReviews[category] ?? [];
+  return (
+    <section className="mt-6 space-y-3">
+      <h2 className="text-sm font-bold">ဖောက်သည် သုံးသပ်ချက်များ</h2>
+      <div className="space-y-3">
+        {reviews.map((review, index) => (
+          <div key={index} className="card-soft space-y-2 rounded-2xl p-4">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm font-semibold">Verified Customer</p>
+              <StarRating stars={review.stars} />
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground">{review.text}</p>
+            <p className="text-xs text-muted-foreground">{review.time}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
