@@ -10,18 +10,34 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAdvertisementsRouteImport } from './routes/admin.advertisements'
+import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
+import { Route as AdminShopsRouteImport } from './routes/admin.shops'
 import { Route as CategoryCategorySlugRouteImport } from './routes/category.$categorySlug'
 import { Route as ShopShopIdRouteImport } from './routes/shop.$shopId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin-login',
+  path: '/admin-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiRoute = AiRouteImport.update({
@@ -54,6 +70,26 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdvertisementsRoute = AdminAdvertisementsRouteImport.update({
+  id: '/advertisements',
+  path: '/advertisements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNoticesRoute = AdminNoticesRouteImport.update({
+  id: '/notices',
+  path: '/notices',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminShopsRoute = AdminShopsRouteImport.update({
+  id: '/shops',
+  path: '/shops',
+  getParentRoute: () => AdminRoute,
+} as any)
 const CategoryCategorySlugRoute = CategoryCategorySlugRouteImport.update({
   id: '/category/$categorySlug',
   path: '/category/$categorySlug',
@@ -67,76 +103,112 @@ const ShopShopIdRoute = ShopShopIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
   '/ai': typeof AiRoute
   '/auth': typeof AuthRoute
   '/home': typeof HomeRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
+  '/admin/advertisements': typeof AdminAdvertisementsRoute
+  '/admin/notices': typeof AdminNoticesRoute
+  '/admin/shops': typeof AdminShopsRoute
   '/category/$categorySlug': typeof CategoryCategorySlugRoute
   '/shop/$shopId': typeof ShopShopIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
   '/ai': typeof AiRoute
   '/auth': typeof AuthRoute
   '/home': typeof HomeRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
+  '/admin/advertisements': typeof AdminAdvertisementsRoute
+  '/admin/notices': typeof AdminNoticesRoute
+  '/admin/shops': typeof AdminShopsRoute
   '/category/$categorySlug': typeof CategoryCategorySlugRoute
   '/shop/$shopId': typeof ShopShopIdRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
   '/ai': typeof AiRoute
   '/auth': typeof AuthRoute
   '/home': typeof HomeRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
+  '/admin/advertisements': typeof AdminAdvertisementsRoute
+  '/admin/notices': typeof AdminNoticesRoute
+  '/admin/shops': typeof AdminShopsRoute
   '/category/$categorySlug': typeof CategoryCategorySlugRoute
   '/shop/$shopId': typeof ShopShopIdRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/admin-login'
     | '/ai'
     | '/auth'
     | '/home'
     | '/notifications'
     | '/profile'
     | '/search'
+    | '/admin/advertisements'
+    | '/admin/notices'
+    | '/admin/shops'
     | '/category/$categorySlug'
     | '/shop/$shopId'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin-login'
     | '/ai'
     | '/auth'
     | '/home'
     | '/notifications'
     | '/profile'
     | '/search'
+    | '/admin/advertisements'
+    | '/admin/notices'
+    | '/admin/shops'
     | '/category/$categorySlug'
     | '/shop/$shopId'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/admin-login'
     | '/ai'
     | '/auth'
     | '/home'
     | '/notifications'
     | '/profile'
     | '/search'
+    | '/admin/advertisements'
+    | '/admin/notices'
+    | '/admin/shops'
     | '/category/$categorySlug'
     | '/shop/$shopId'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
   AiRoute: typeof AiRoute
   AuthRoute: typeof AuthRoute
   HomeRoute: typeof HomeRoute
@@ -154,6 +226,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-login': {
+      id: '/admin-login'
+      path: '/admin-login'
+      fullPath: '/admin-login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai': {
@@ -198,6 +284,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/advertisements': {
+      id: '/admin/advertisements'
+      path: '/advertisements'
+      fullPath: '/admin/advertisements'
+      preLoaderRoute: typeof AdminAdvertisementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notices': {
+      id: '/admin/notices'
+      path: '/notices'
+      fullPath: '/admin/notices'
+      preLoaderRoute: typeof AdminNoticesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/shops': {
+      id: '/admin/shops'
+      path: '/shops'
+      fullPath: '/admin/shops'
+      preLoaderRoute: typeof AdminShopsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/category/$categorySlug': {
       id: '/category/$categorySlug'
       path: '/category/$categorySlug'
@@ -215,8 +329,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminAdvertisementsRoute: typeof AdminAdvertisementsRoute
+  AdminNoticesRoute: typeof AdminNoticesRoute
+  AdminShopsRoute: typeof AdminShopsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdvertisementsRoute: AdminAdvertisementsRoute,
+  AdminNoticesRoute: AdminNoticesRoute,
+  AdminShopsRoute: AdminShopsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
   AiRoute: AiRoute,
   AuthRoute: AuthRoute,
   HomeRoute: HomeRoute,

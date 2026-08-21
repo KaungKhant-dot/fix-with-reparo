@@ -1,5 +1,6 @@
 import { useMutation, useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { adminToShop, mergeShops, useAdminState } from "@/lib/admin-store";
 import {
   categoryLabels,
   shops as mockShops,
@@ -120,17 +121,27 @@ async function fetchShops(category: string): Promise<Shop[]> {
   return (data ?? []).map((row) => mapShop(row as ShopRow));
 }
 
-/** Live shops from Supabase, filtered and sorted on the client. */
-export function useShops(filters: ShopFilters = {}) {
-  const category = filters.category ?? "all";
-  const query = useQuery({
+/** Raw Supabase shop query (no admin overlay). Used by the admin panel. */
+export function useShopsQuery(category = "all") {
+  return useQuery({
     queryKey: ["repair_shops", category],
     queryFn: () => fetchShops(category),
     staleTime: 60_000,
   });
+}
+
+/** Live shops from Supabase + admin overlay, filtered and sorted on the client. */
+export function useShops(filters: ShopFilters = {}) {
+  const category = filters.category ?? "all";
+  const query = useShopsQuery(category);
+  const adminState = useAdminState();
+
+  const base = mergeShops(query.data ?? [], adminState, { customerView: true }).filter(
+    (s) => category === "all" || s.category === category,
+  );
 
   return {
-    shops: applyClientFilters(query.data ?? [], filters),
+    shops: applyClientFilters(base, filters),
     isLoading: query.isLoading,
     offline: query.isError,
   };
@@ -138,7 +149,9 @@ export function useShops(filters: ShopFilters = {}) {
 
 
 export function useShop(shopId: string) {
-  return useQuery({
+  const adminState = useAdminState();
+  const override = adminState.shops[shopId];
+  const query = useQuery({
     queryKey: ["repair_shop", shopId],
     queryFn: async (): Promise<Shop | null> => {
       const { data, error } = await supabase
@@ -150,7 +163,13 @@ export function useShop(shopId: string) {
       if (!data) return null;
       return mapShop(data as ShopRow);
     },
+    enabled: !override,
   });
+
+  if (override) {
+    return { ...query, data: adminToShop(override), isLoading: false, isError: false } as typeof query;
+  }
+  return query;
 }
 
 /* ------------------------------ notifications ------------------------------ */

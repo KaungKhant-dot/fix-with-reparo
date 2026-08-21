@@ -16,12 +16,14 @@ import {
 } from "lucide-react";
 import { BannerCarousel } from "@/components/BannerCarousel";
 import { BottomNav } from "@/components/BottomNav";
+import { SponsoredShops } from "@/components/SponsoredShops";
 import { ShopCard } from "@/components/ShopCard";
 import { FilterBar } from "@/components/FilterBar";
 import { ShopListSkeleton } from "@/components/ShopListSkeleton";
 import { useCategories, useShops } from "@/lib/repair-data";
 import { frequentSearches } from "@/lib/shops";
 import { useAuth } from "@/lib/use-auth";
+import { usePublishedNotices } from "@/lib/admin-store";
 
 
 export const Route = createFileRoute("/home")({
@@ -65,6 +67,7 @@ function HomeScreen() {
   const [sort, setSort] = useState("nearest");
 
 
+  const notices = usePublishedNotices();
   const { data: categories = [] } = useCategories();
   const { shops, isLoading, offline } = useShops({ category, sort });
   const nearby = shops.slice(0, 6);
@@ -93,7 +96,11 @@ function HomeScreen() {
             className="relative flex size-10 items-center justify-center rounded-full bg-primary-foreground/10"
           >
             <Bell className="size-5" />
-            <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-accent" />
+            {notices.length > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
+                {notices.length}
+              </span>
+            )}
           </Link>
         </div>
 
@@ -164,6 +171,8 @@ function HomeScreen() {
             })}
           </div>
         </section>
+
+        <SponsoredShops />
 
         <section className="mt-6" aria-label="Promotions">
           <BannerCarousel />
