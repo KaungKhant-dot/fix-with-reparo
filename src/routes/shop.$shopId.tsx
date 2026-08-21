@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Clock, CreditCard, MapPin, Phone, Star, Wrench } from "lucide-react";
 import { useShop } from "@/lib/repair-data";
-import { categoryShopLabels } from "@/lib/shops";
+import { categoryShopLabels, type CategorySlug } from "@/lib/shops";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusPill } from "@/components/ShopCard";
 import { BottomNav } from "@/components/BottomNav";
