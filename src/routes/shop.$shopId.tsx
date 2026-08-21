@@ -141,6 +141,8 @@ function ShopDetails() {
           )}
         </section>
 
+        <ReviewsSection category={shop.category} />
+
         <a
           href={`tel:${shop.phone.replace(/\s/g, "")}`}
           className="btn-pill btn-primary mt-8 w-full"
