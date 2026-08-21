@@ -212,15 +212,20 @@ function AuthScreen() {
             </button>
 
             {!isSignup && (
-              <div
-                className="mt-4 rounded-xl border border-border/60 p-3 text-center"
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail("demo@reparo.com");
+                  setPassword("password123");
+                }}
+                className="mt-4 w-full rounded-xl border border-border/60 p-3 text-center transition-colors hover:bg-muted"
                 style={{ backgroundColor: "#F8FAFC" }}
               >
                 <p className="text-xs font-semibold text-foreground">For Demo Testing:</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   Email: demo@reparo.com | Password: password123
                 </p>
-              </div>
+              </button>
             )}
           </form>
 
