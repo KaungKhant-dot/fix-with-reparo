@@ -24,7 +24,7 @@ export const banners: BannerSlide[] = [
   {
     id: "special-promo",
     style: "promo",
-    title: "ပထမဆုံး အကြိမ် အပ်ထည်များအတွက် 20% OFF!",
+    title: "အသစ်ဝယ်ဖို့ မလောပါနဲ့",
     subtitle:
       "ဖိနပ် နှင့် အိတ် ပြုပြင်ခြင်း ဝန်ဆောင်မှုအားလုံးအတွက် အထူးလျှော့စျေး",
     badge: "Limited Time Offer",
