@@ -145,7 +145,11 @@ function ShopDetails() {
           )}
         </section>
 
-        <ReviewsSection category={shop.category} />
+        <ReviewsSection
+          category={shop.category}
+          userReviews={userReviews}
+          onSubmit={(review) => setUserReviews((prev) => [review, ...prev])}
+        />
 
         <a
           href={`tel:${shop.phone.replace(/\s/g, "")}`}
