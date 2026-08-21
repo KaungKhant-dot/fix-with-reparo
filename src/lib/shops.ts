@@ -63,7 +63,7 @@ export const categorySlugs: CategorySlug[] = [
   "glasses",
 ];
 
-const categoryImages: Record<CategorySlug, string> = {
+export const categoryImages: Record<CategorySlug, string> = {
   bag: shopBag,
   clothes: shopClothes,
   watches: shopWatch,
