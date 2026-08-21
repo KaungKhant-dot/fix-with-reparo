@@ -29,6 +29,8 @@ export const Route = createFileRoute("/shop/$shopId")({
 function ShopDetails() {
   const { shopId } = Route.useParams();
   const { data: shop, isLoading } = useShop(shopId);
+  const [userReviews, setUserReviews] = useState<Review[]>([]);
+
 
 
   if (isLoading && !shop) {
