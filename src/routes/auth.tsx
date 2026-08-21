@@ -205,6 +205,16 @@ function AuthScreen() {
                 />
               </div>
             )}
+            {!isSignup && (
+              <button
+                type="submit"
+                disabled={busy}
+                className="btn-pill btn-primary mt-2"
+              >
+                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                Log In
+              </button>
+            )}
 
           </form>
 
