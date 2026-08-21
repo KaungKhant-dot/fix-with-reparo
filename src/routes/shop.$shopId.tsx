@@ -91,7 +91,7 @@ function ShopDetails() {
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
               <span className="font-normal text-muted-foreground">
-                ({shop.reviews} သုံးသပ်ချက်)
+                ({Number(shop.reviews) + userReviews.length} သုံးသပ်ချက်)
               </span>
             )}
           </span>
