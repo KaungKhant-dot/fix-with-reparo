@@ -210,6 +210,18 @@ function AuthScreen() {
               {busy && <Loader2 className="size-4 animate-spin" />}
               {isSignup ? "Create Account" : "Log In"}
             </button>
+
+            {!isSignup && (
+              <div
+                className="mt-4 rounded-xl border border-border/60 p-3 text-center"
+                style={{ backgroundColor: "#F8FAFC" }}
+              >
+                <p className="text-xs font-semibold text-foreground">For Demo Testing:</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Email: demo@reparo.com | Password: password123
+                </p>
+              </div>
+            )}
           </form>
 
         )}
