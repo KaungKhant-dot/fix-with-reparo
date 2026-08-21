@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { ArrowLeft, Clock, CreditCard, MapPin, Phone, Star, Wrench } from "lucide-react";
 import { useShop } from "@/lib/repair-data";
 import { categoryShopLabels, type CategorySlug } from "@/lib/shops";
@@ -27,6 +29,8 @@ export const Route = createFileRoute("/shop/$shopId")({
 function ShopDetails() {
   const { shopId } = Route.useParams();
   const { data: shop, isLoading } = useShop(shopId);
+  const [userReviews, setUserReviews] = useState<Review[]>([]);
+
 
 
   if (isLoading && !shop) {
@@ -87,7 +91,7 @@ function ShopDetails() {
             <Star className="size-3.5 fill-accent text-accent" />
             {shop.reviews && (
               <span className="font-normal text-muted-foreground">
-                ({shop.reviews} သုံးသပ်ချက်)
+                ({Number(shop.reviews) + userReviews.length} သုံးသပ်ချက်)
               </span>
             )}
           </span>
@@ -141,7 +145,11 @@ function ShopDetails() {
           )}
         </section>
 
-        <ReviewsSection category={shop.category} />
+        <ReviewsSection
+          category={shop.category}
+          userReviews={userReviews}
+          onSubmit={(review) => setUserReviews((prev) => [review, ...prev])}
+        />
 
         <a
           href={`tel:${shop.phone.replace(/\s/g, "")}`}
@@ -274,11 +282,67 @@ const categoryReviews: Record<CategorySlug, Review[]> = {
   ],
 };
 
-function ReviewsSection({ category }: { category: CategorySlug }) {
-  const reviews = categoryReviews[category] ?? [];
+function ReviewsSection({
+  category,
+  userReviews,
+  onSubmit,
+}: {
+  category: CategorySlug;
+  userReviews: Review[];
+  onSubmit: (review: Review) => void;
+}) {
+  const [stars, setStars] = useState(0);
+  const [text, setText] = useState("");
+  const reviews = [...userReviews, ...(categoryReviews[category] ?? [])];
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (stars < 1) {
+      toast.error("Please select a star rating.");
+      return;
+    }
+    if (!text.trim()) {
+      toast.error("Please write your review.");
+      return;
+    }
+    onSubmit({ text: text.trim(), time: "Just now", stars });
+    setStars(0);
+    setText("");
+    toast.success("Review submitted successfully.");
+  }
+
   return (
     <section className="mt-6 space-y-3">
       <h2 className="text-sm font-bold">ဖောက်သည် သုံးသပ်ချက်များ</h2>
+
+      <form onSubmit={handleSubmit} className="card-soft space-y-3 rounded-2xl p-4">
+        <div className="flex items-center gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`${i + 1} star`}
+              onClick={() => setStars(i + 1)}
+              className="p-0.5"
+            >
+              <Star
+                className={`size-6 ${i < stars ? "fill-accent text-accent" : "text-muted-foreground"}`}
+              />
+            </button>
+          ))}
+        </div>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Write your review..."
+          rows={3}
+          className="w-full resize-none rounded-2xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary"
+        />
+        <button type="submit" className="btn-pill btn-primary w-full">
+          Submit Review
+        </button>
+      </form>
+
       <div className="space-y-3">
         {reviews.map((review, index) => (
           <div key={index} className="card-soft space-y-2 rounded-2xl p-4">
