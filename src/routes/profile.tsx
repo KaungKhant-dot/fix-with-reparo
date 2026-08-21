@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, Heart, MapPin, Settings, Wrench } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
 import { clearLocalUser, useAuth } from "@/lib/use-auth";
+
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
