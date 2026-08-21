@@ -177,6 +177,8 @@ function InfoRow({
       </div>
     </div>
   );
+}
+
 function StarRating({ stars }: { stars: number }) {
   return (
     <div className="flex items-center gap-0.5">
