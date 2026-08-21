@@ -206,27 +206,6 @@ function AuthScreen() {
               </div>
             )}
 
-            <button type="submit" disabled={busy} className="btn-pill btn-primary mt-2">
-              {busy && <Loader2 className="size-4 animate-spin" />}
-              {isSignup ? "Create Account" : "Log In"}
-            </button>
-
-            {!isSignup && (
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail("demo@reparo.com");
-                  setPassword("password123");
-                }}
-                className="mt-4 w-full rounded-xl border border-border/60 p-3 text-center transition-colors hover:bg-muted"
-                style={{ backgroundColor: "#F8FAFC" }}
-              >
-                <p className="text-xs font-semibold text-foreground">For Demo Testing:</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Email: demo@reparo.com | Password: password123
-                </p>
-              </button>
-            )}
           </form>
 
         )}
