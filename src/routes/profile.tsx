@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronRight, Heart, MapPin, Settings, Wrench } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { supabase } from "@/integrations/supabase/client";
 import { clearLocalUser, useAuth } from "@/lib/use-auth";
+
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -23,12 +23,6 @@ export const Route = createFileRoute("/profile")({
   component: ProfileScreen,
 });
 
-const rows = [
-  { Icon: Wrench, label: "Repair history" },
-  { Icon: Heart, label: "Saved shops" },
-  { Icon: MapPin, label: "Saved addresses" },
-  { Icon: Settings, label: "Settings" },
-];
 
 function ProfileScreen() {
   const { isAuthenticated, email, fullName, initials } = useAuth();
@@ -57,16 +51,7 @@ function ProfileScreen() {
         </div>
       </header>
 
-      <main className="space-y-3 px-6 pt-6">
-        {rows.map(({ Icon, label }) => (
-          <button key={label} className="card-soft flex w-full items-center gap-3 p-4 text-left">
-            <span className="flex size-9 items-center justify-center rounded-full bg-secondary">
-              <Icon className="size-4 text-secondary-foreground" />
-            </span>
-            <span className="flex-1 text-sm font-medium">{label}</span>
-            <ChevronRight className="size-4 text-muted-foreground" />
-          </button>
-        ))}
+      <main className="px-6 pt-6">
 
         {isAuthenticated ? (
           <button onClick={signOut} className="btn-pill btn-outline mt-6">
